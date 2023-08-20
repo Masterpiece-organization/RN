@@ -1,8 +1,13 @@
 import React from 'react';
 import Navigation from '@/navigation/Navigation';
+import {MainContextProvider} from '@/context/MainContext';
 
 function App(): JSX.Element {
-  return <Navigation />;
+  return (
+    <MainContextProvider>
+      <Navigation />
+    </MainContextProvider>
+  );
 }
 
 export default App;
