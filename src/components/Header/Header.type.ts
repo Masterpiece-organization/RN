@@ -1,5 +1,7 @@
 export interface HeaderType {
-  //   left?: JSX.Element;
-  center?: string;
+  left?: boolean;
+  center?: JSX.Element;
   right?: JSX.Element;
+  animatingWidthValues?: number[];
+  border?: boolean;
 }

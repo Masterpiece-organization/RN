@@ -5,14 +5,16 @@ import {ActivityIndicator, View, StyleSheet} from 'react-native';
 import {styled} from 'nativewind';
 
 interface LoaderType {
-  color?: string;
+  color?: [{color: string | undefined}];
 }
 
-const Loader = ({color = '#000000'}: LoaderType) => (
-  <View style={style.container}>
-    <ActivityIndicator size="small" color={color} />
-  </View>
-);
+const Loader = ({color = [{color: '#000000'}]}: LoaderType) => {
+  return (
+    <View style={style.container}>
+      <ActivityIndicator size="small" color={color[0]?.color} />
+    </View>
+  );
+};
 
 const style = StyleSheet.create({
   container: {

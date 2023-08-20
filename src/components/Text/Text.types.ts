@@ -1,7 +1,7 @@
 export interface TextType {
-  textColor?: [{color?: string | undefined}];
+  textColor?: string;
   type?: 'title' | 'subtitle' | 'bodySmall';
-  classStyle?: string;
+  className?: string;
   onPress?: () => void;
   children?: React.ReactNode | string;
 }
