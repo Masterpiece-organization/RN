@@ -1,77 +1,48 @@
-import {
-  StyleSheet,
-  Text as RNText,
-  TextStyle,
-  StyleProp,
-  useColorScheme,
-} from 'react-native';
-import {styled} from 'nativewind';
+import {Text as RNText} from 'react-native';
 import {TextType} from './Text.types';
-import scaleFont from '@/utils/scaleFont';
+import {clsx} from 'clsx';
+import {useMainContext} from '@/context/MainContext';
 
 const Text = ({
-  textColor,
+  textColor = undefined,
   type,
   onPress,
-  classStyle,
+  className,
   children,
 }: TextType): JSX.Element => {
-  const colorScheme = useColorScheme();
+  const contexts = useMainContext();
 
-  const defaultColor = {
-    color: colorScheme === 'dark' ? '#fff' : '#222',
-  };
-
-  // Set default font type
-  let textStyle: StyleProp<TextStyle> = {
-    ...style.default,
-    ...(textColor ? textColor?.[0] : defaultColor),
-  };
+  let textType = defaultStyle.body;
 
   if (type === 'title') {
-    textStyle = StyleSheet.compose(textStyle, style.title);
+    textType = defaultStyle.title;
   }
 
   if (type === 'subtitle') {
-    textStyle = StyleSheet.compose(textStyle, style.subtitle);
+    textType = defaultStyle.subtitle;
   }
 
   if (type === 'bodySmall') {
-    textStyle = StyleSheet.compose(textStyle, style.bodySmall);
+    textType = defaultStyle.bodySmall;
   }
 
+  const defaultColor =
+    contexts?.colorScheme === 'dark' ? 'text-white' : 'text-black';
+
+  const textStyle = clsx(textType, textColor ?? defaultColor, className);
+
   return (
-    <RNText style={textStyle} onPress={onPress} className={classStyle}>
+    <RNText onPress={onPress} className={textStyle}>
       {children && children}
     </RNText>
   );
 };
 
-export default styled(Text, {
-  props: {
-    textColor: true,
-  },
-});
+export default Text;
 
-const style = StyleSheet.create({
-  title: {
-    fontSize: scaleFont(36),
-    fontWeight: '600',
-    lineHeight: 40,
-  },
-  subtitle: {
-    fontSize: scaleFont(24),
-    fontWeight: '500',
-    lineHeight: 32,
-  },
-  bodySmall: {
-    fontSize: scaleFont(12),
-    fontWeight: '400',
-    lineHeight: 16,
-  },
-  default: {
-    fontSize: scaleFont(16),
-    fontWeight: '400',
-    lineHeight: 24,
-  },
-});
+const defaultStyle = {
+  title: 'text-2xl font-bold',
+  subtitle: 'text-lg font-medium',
+  body: 'text-base',
+  bodySmall: 'text-sm',
+};
