@@ -10,27 +10,26 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import {useMainContext} from '@/context/MainContext';
 
 import Button from '../Button';
 
 const initialOffset = 0;
 
 const Header = ({
+  left = true,
   center = undefined,
   right = undefined,
   animatingWidthValues = [0, 0],
+  border = false,
   ...props
 }: HeaderType & NativeStackHeaderProps) => {
+  const contexts = useMainContext();
   //   const [left, center, right] = children;
 
   const colorScheme = useColorScheme();
 
-  console.log(props, animatingWidthValues);
-
-  const {
-    route: {name},
-    navigation,
-  } = props;
+  const {navigation} = props;
 
   const offset = useSharedValue(initialOffset);
 
@@ -49,8 +48,6 @@ const Header = ({
     };
   });
 
-  console.log(name, animatedStyles);
-
   useEffect(() => {
     offset.value = withSpring(1, {
       mass: 3.7,
@@ -64,29 +61,44 @@ const Header = ({
   }, []);
 
   return (
-    <View className="px-5">
-      <View>
-        <Button
-          label=""
-          icon={
-            <ArrowLeftIcon
-              color={colorScheme === 'dark' ? 'white' : 'black'}
-              width={28}
-              height={28}
+    <View className="pt-1 ">
+      <View className="px-5 pb-3 flex flex-row items-center justify-between ">
+        <View>
+          {left && (
+            <Button
+              label=""
+              icon={
+                <ArrowLeftIcon
+                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  width={28}
+                  height={28}
+                />
+              }
+              onPress={() => navigation.goBack()}
+              type="text"
+              buttonColor=""
             />
-          }
-          onPress={() => navigation.goBack()}
-          //   textColor="text-neutral-600"
-          type="text"
-        />
+          )}
+        </View>
+        <View>
+          <Text>{center}</Text>
+        </View>
+        <View>{right}</View>
       </View>
-      <View>
-        <Text>{center}</Text>
-      </View>
-      <View>{right}</View>
-      <View className="border-b w-full border-neutral-300">
+
+      <View
+        className={` w-full ${
+          border
+            ? contexts?.colorScheme === 'dark'
+              ? 'border-neutral-600 border-b'
+              : 'border-neutral-300 border-b'
+            : ''
+        }`}>
         <Animated.View
-          className="absolute border-b-2 border-black"
+          className={`absolute border-b-2 ${
+            border &&
+            (contexts?.colorScheme === 'dark' ? 'border-white' : 'border-black')
+          } `}
           style={[animatedStyles, styles.animatingBorder]}
         />
       </View>
