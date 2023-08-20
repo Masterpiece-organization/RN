@@ -1,10 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {styled} from 'nativewind';
-import PressableOpacity from '../PressableOpacity';
+import {View, TouchableOpacity} from 'react-native';
+// import {styled} from 'nativewind';
+// import PressableOpacity from '../PressableOpacity';
 import {ButtonType} from './Button.types';
 import Loader from '../Loader';
-import scaleFont from '@/utils/scaleFont';
+import {clsx} from 'clsx';
+import {useMainContext} from '@/context/MainContext';
+import Text from '../Text';
 
 const Button = ({
   label,
@@ -15,95 +17,144 @@ const Button = ({
   disabled = false,
   isLoading = false,
   icon = null,
-  customButtonStyle,
-  customTextStyle,
+  className,
 }: ButtonType) => {
-  //   const {colorScheme} = useColorScheme();
+  const contexts = useMainContext();
+  // colorScheme === 'dark' ? 'bg-neutral-700' : 'bg-black';
+  // colorScheme === 'dark' ? 'text-white' : 'text-neutral-600';
 
-  const generateButtonStyle = (
-    borderColor: {backgroundColor?: string | undefined} | undefined,
-    type: string,
-  ): object => {
-    if (customButtonStyle) {
-      return customButtonStyle;
-    }
-    if (type === 'outlined') {
-      return {
-        ...style.baseButton,
-        borderColor: borderColor?.backgroundColor,
-        ...style.outlinedButton,
-      };
-    }
+  // const defaultColor =
+  //   contexts?.colorScheme === 'dark' ? 'text-black' : 'text-white';
 
-    return {...style.baseButton, ...borderColor};
-  };
+  const defaultBg =
+    contexts?.colorScheme === 'dark' ? 'bg-neutral-700' : 'bg-black';
 
-  const generatedStyle = generateButtonStyle(buttonColor?.[0], type);
-
-  const textStyle = customTextStyle ? customTextStyle : textColor;
+  let buttonType = defaultStyle.baseButton;
 
   if (type === 'text') {
-    return (
-      <TouchableOpacity onPress={onPress} style={customButtonStyle}>
-        {icon ? (
-          icon
-        ) : (
-          <Text style={[style.textButton, textColor]}>{label}</Text>
-        )}
-      </TouchableOpacity>
-    );
+    buttonType = defaultStyle.textButton;
   }
 
+  if (type === 'outlined') {
+    buttonType = defaultStyle.outlinedButton;
+  }
+
+  const buttonStyle = clsx(buttonType, buttonColor ?? defaultBg, className);
+
+  const textStyle = clsx(textColor ?? defaultStyle.textColor);
+
+  console.log(buttonStyle);
+
   return (
-    <PressableOpacity
+    <TouchableOpacity
       onPress={onPress}
-      disabled={disabled}
-      isLoading={isLoading}
-      customStyle={customButtonStyle}>
-      <View style={generatedStyle}>
-        <View>
-          {isLoading ? (
-            <Loader color={textColor?.[0]?.color} />
-          ) : icon ? (
-            icon
-          ) : (
-            <Text style={[textStyle, style.textButton]}>{label}</Text>
-          )}
+      className={buttonStyle}
+      disabled={disabled}>
+      {isLoading ? (
+        <Loader color={textStyle} />
+      ) : (
+        <View className="items-center justify-center flex-row">
+          {icon}
+          <Text className={textStyle}>{label}</Text>
         </View>
-      </View>
-    </PressableOpacity>
+      )}
+    </TouchableOpacity>
   );
+
+  // const generateButtonStyle = (
+  //   borderColor: {backgroundColor?: string | undefined} | undefined,
+  //   type: string,
+  // ): object => {
+  //   if (customButtonStyle) {
+  //     return customButtonStyle;
+  //   }
+  //   if (type === 'outlined') {
+  //     return {
+  //       ...style.baseButton,
+  //       borderColor: borderColor?.backgroundColor,
+  //       ...style.outlinedButton,
+  //     };
+  //   }
+
+  //   return {...style.baseButton, ...borderColor};
+  // };
+
+  // const generatedStyle = generateButtonStyle(buttonColor?.[0], type);
+
+  // const textStyle = customTextStyle ? customTextStyle : textColor;
+
+  // if (type === 'text') {
+  //   return (
+  //     <TouchableOpacity onPress={onPress} style={customButtonStyle}>
+  //       {icon ? (
+  //         icon
+  //       ) : (
+  //         <Text style={[style.textButton, textColor]}>{label}</Text>
+  //       )}
+  //     </TouchableOpacity>
+  //   );
+  // }
+
+  // return (
+  //   <PressableOpacity
+  //     onPress={onPress}
+  //     disabled={disabled}
+  //     isLoading={isLoading}
+  //     customStyle={customButtonStyle}>
+  //     <View style={generatedStyle}>
+  //       <View>
+  //         {isLoading ? (
+  //           <Loader color={textColor?.[0]?.color} />
+  //         ) : icon ? (
+  //           icon
+  //         ) : (
+  //           <Text style={[textStyle, style.textButton]}>{label}</Text>
+  //         )}
+  //       </View>
+  //     </View>
+  //   </PressableOpacity>
+  // );
 };
 
-export default styled(Button, {
-  props: {
-    buttonColor: true,
-    textColor: true,
-    type: true,
-    customButtonStyle: true,
-    customTextStyle: true,
-  },
-});
+// export default styled(Button, {
+//   props: {
+//     buttonColor: true,
+//     textColor: true,
+//     type: true,
+//     customButtonStyle: true,
+//     customTextStyle: true,
+//   },
+// });
 
-const style = StyleSheet.create({
-  baseButton: {
-    height: 52,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    flexDirection: 'row',
-  },
-  outlinedButton: {
-    borderWidth: 1,
-  },
-  textButton: {
-    fontSize: scaleFont(16),
-  },
-  baseText: {
-    color: 'white',
-  },
-  iconContainer: {
-    width: 52,
-  },
-});
+export default Button;
+
+// const style = StyleSheet.create({
+//   baseButton: {
+//     height: 52,
+//     width: '100%',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderRadius: 8,
+//     flexDirection: 'row',
+//   },
+//   outlinedButton: {
+//     borderWidth: 1,
+//   },
+//   textButton: {
+//     fontSize: scaleFont(16),
+//   },
+//   baseText: {
+//     color: 'white',
+//   },
+//   iconContainer: {
+//     width: 52,
+//   },
+// });
+
+const defaultStyle = {
+  baseButton: 'h-12 w-100 justify-center items-center rounded-lg flex-row',
+  textButton: '',
+  outlinedButton:
+    'h-12 w-100 justify-center items-center rounded-lg flex-row border',
+  textColor: 'text-white',
+};
