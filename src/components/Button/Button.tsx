@@ -152,9 +152,9 @@ export default Button;
 // });
 
 const defaultStyle = {
-  baseButton: 'h-12 w-100 justify-center items-center rounded-lg flex-row',
+  baseButton: 'p-3 w-100 justify-center items-center rounded-lg flex-row',
   textButton: '',
   outlinedButton:
-    'h-12 w-100 justify-center items-center rounded-lg flex-row border',
+    'p-3 w-100 justify-center items-center rounded-lg flex-row border',
   textColor: 'text-white',
 };
