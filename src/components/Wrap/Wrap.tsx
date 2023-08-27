@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import {useMainContext} from '@/context/MainContext';
+import {useMainContext} from '@/contexts/MainContext';
 import {clsx} from 'clsx';
 import {WrapType} from './Wrap.type';
 

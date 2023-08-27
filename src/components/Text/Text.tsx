@@ -1,7 +1,7 @@
 import {Text as RNText} from 'react-native';
 import {TextType} from './Text.types';
 import {clsx} from 'clsx';
-import {useMainContext} from '@/context/MainContext';
+import {useMainContext} from '@/contexts/MainContext';
 
 const Text = ({
   textColor = undefined,
