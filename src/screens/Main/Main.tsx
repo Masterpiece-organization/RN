@@ -6,6 +6,7 @@ const Main = () => {
     <Container>
       <View>
         <Text>test</Text>
+        <Text>test</Text>
       </View>
     </Container>
   );
