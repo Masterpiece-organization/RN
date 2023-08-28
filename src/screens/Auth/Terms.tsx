@@ -1,13 +1,13 @@
 import {useState} from 'react';
-import {Button, Text, Wrap} from '@components/index';
+import {Button, Text} from '@components/index';
 import {
   SafeAreaView,
   View,
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
-import {CheckBox} from '@/components/index';
-import {useMainContext} from '@/context/MainContext';
+import {CheckBox, Container} from '@/components';
+import {useMainContext} from '@/contexts/MainContext';
 import {RootStackParamList} from '@/typings/RootStackParamList';
 import {StackScreenProps} from '@react-navigation/stack';
 
@@ -60,7 +60,7 @@ const Terms = ({navigation}: TermsScreenProps) => {
     const {ToU, personalInfor} = isChecked;
 
     if (ToU && personalInfor) {
-      return navigation.navigate('Register');
+      return navigation.navigate('CheckEmail');
     }
     createAlert();
   };
@@ -74,10 +74,10 @@ const Terms = ({navigation}: TermsScreenProps) => {
   };
 
   return (
-    <SafeAreaView className="dark:bg-black">
+    <Container>
       <SafeAreaView className="flex">
-        <View className="justify-center px-8 pt-8 ">
-          <Text className="mb-2" type="subtitle">
+        <View className="justify-center pt-8 ">
+          <Text className="mb-3" type="title">
             이용약관에 동의해주세요.
           </Text>
           <Text
@@ -90,7 +90,12 @@ const Terms = ({navigation}: TermsScreenProps) => {
           </Text>
         </View>
       </SafeAreaView>
-      <Wrap border={true} classStyle="m-8">
+      <View
+        className={`my-8 ${
+          contexts?.colorScheme === 'dark'
+            ? 'border-neutral-700 border rounded-lg'
+            : 'border-neutral-300 border rounded-lg'
+        }`}>
         <View
           className={`p-4 border-b ${
             contexts?.colorScheme === 'dark'
@@ -106,7 +111,7 @@ const Terms = ({navigation}: TermsScreenProps) => {
         </View>
 
         {TERMS_DATA.map(({label, objName, className}) => (
-          <View className={className}>
+          <View className={className} key={label}>
             <TouchableWithoutFeedback
               className="flex-row items-center"
               onPress={() => handlePress(objName)}>
@@ -119,18 +124,11 @@ const Terms = ({navigation}: TermsScreenProps) => {
             </TouchableWithoutFeedback>
           </View>
         ))}
-      </Wrap>
-      <View className="pb-8 px-8">
-        <Button
-          label="다음"
-          onPress={handleSubmit}
-          textColor="text-white"
-          buttonColor={
-            contexts?.colorScheme === 'dark' ? 'bg-neutral-700' : 'bg-black'
-          }
-        />
       </View>
-    </SafeAreaView>
+      <View className="pb-8">
+        <Button label="다음" onPress={handleSubmit} textColor="text-white" />
+      </View>
+    </Container>
   );
 };
 

@@ -1,14 +1,18 @@
 import React from 'react';
 
-import {View, Text, StyleSheet} from 'react-native';
-import scaleFont from '@/utils/scaleFont';
+import {View, StyleSheet} from 'react-native';
+import {Text} from '@components/index';
 interface ErrorType {
   error?: string;
 }
 
 const Error = ({error}: ErrorType) => (
   <View style={style.container}>
-    {error && <Text style={style.text}>{error}</Text>}
+    {error && (
+      <Text className="text-red-600" type="small">
+        {error}
+      </Text>
+    )}
   </View>
 );
 
@@ -17,10 +21,6 @@ const style = StyleSheet.create({
     width: '100%',
     marginTop: 4,
     marginLeft: 4,
-  },
-  text: {
-    fontSize: scaleFont(12),
-    color: '#f00',
   },
 });
 

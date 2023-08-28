@@ -1,7 +1,7 @@
 export interface HeaderType {
   left?: boolean;
-  center?: JSX.Element;
-  right?: JSX.Element;
+  center?: string | React.ReactNode;
+  right?: React.ReactNode;
   animatingWidthValues?: number[];
   border?: boolean;
 }

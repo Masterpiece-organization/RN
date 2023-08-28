@@ -1,12 +1,17 @@
 import React from 'react';
-import Navigation from '@/navigation/Navigation';
-import {MainContextProvider} from '@/context/MainContext';
+import Navigation from '@/navigation/index';
+import {MainContextProvider} from '@/contexts/MainContext';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function App(): JSX.Element {
   return (
-    <MainContextProvider>
-      <Navigation />
-    </MainContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <MainContextProvider>
+        <Navigation />
+      </MainContextProvider>
+    </QueryClientProvider>
   );
 }
 

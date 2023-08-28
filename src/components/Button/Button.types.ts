@@ -4,6 +4,7 @@ export interface ButtonType {
   label: string;
   buttonColor?: string;
   textColor?: string;
+  textSize?: string;
   textStyle?: object;
   onPress: () => void;
   type?: 'text' | 'outlined' | 'primary';

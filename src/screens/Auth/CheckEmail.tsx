@@ -1,24 +1,28 @@
-import {View, SafeAreaView} from 'react-native';
 import {useState, useCallback} from 'react';
-import {Text, Button, TextInput, Container} from '@components/index';
-import {RootStackParamList} from '@/typings/RootStackParamList';
-import {StackScreenProps} from '@react-navigation/stack';
-import {useMainContext} from '@/contexts/MainContext';
+import {View} from 'react-native';
+import {Container, Text, TextInput, Button} from '@/components';
 import {
   useForm,
   FormProvider,
   SubmitHandler,
   FieldValues,
 } from 'react-hook-form';
+import {useMainContext} from '@/contexts/MainContext';
+import useUser from '@/hooks/useUser';
+import {RootStackParamList} from '@/typings/RootStackParamList';
+import {StackScreenProps} from '@react-navigation/stack';
 import useTimer from '@/hooks/useTimer';
 import {useFocusEffect} from '@react-navigation/native';
 
-type FindPwScreenProps = StackScreenProps<RootStackParamList, 'FindPw'>;
+export type CheckEmailScreenProps = StackScreenProps<
+  RootStackParamList,
+  'CheckEmail'
+>;
 
-const FindPw = ({navigation}: FindPwScreenProps) => {
+const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
   const contexts = useMainContext();
+  const {checkEmailQuery, verifyAuthCodeQuery} = useUser();
 
-  // useForm hook and set default behavior/values
   const {...methods} = useForm({mode: 'onSubmit'});
 
   const [formError, setError] = useState<boolean>(false);
@@ -27,17 +31,53 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
   const {minutes, seconds} = useTimer({timerOn, setTimerOn});
 
   const checkEmail: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.authentication);
+    const {email} = data;
+
+    // checkEmailQuery.mutate(
+    //   {email},
+    //   {
+    //     onSuccess: () => {
+    //       setTimerOn(true);
+    //     },
+    //     onError: err => {
+    //       console.log(err);
+    //       methods.setError('email', {
+    //         type: 'manual',
+    //         message: '이미 존재하는 이메일입니다.',
+    //       });
+    //     },
+    //   },
+    // );
 
     setTimerOn(true);
   };
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.authentication);
+    const {email, verificationCode} = data;
 
-    navigation.navigate('ResetPw');
+    // verifyAuthCodeQuery.mutate(
+    //   {email, auth_number: verificationCode},
+    //   {
+    //     onSuccess: () => {
+    //       navigation.navigate('Register', {
+    //         email,
+    //       });
+    //       setTimerOn(false);
+    //       methods.reset({});
+    //     },
+    //     onError: err => {
+    //       console.log(err);
+    //       methods.setError('verificationCode', {
+    //         type: 'manual',
+    //         message: '인증코드가 틀렸습니다. 다시 입력해 주세요!',
+    //       });
+    //     },
+    //   },
+    // );
+
+    navigation.navigate('Register', {
+      email,
+    });
   };
 
   useFocusEffect(
@@ -51,16 +91,19 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
 
   return (
     <Container>
-      <SafeAreaView className="flex">
-        <View className="justify-center pt-8 ">
-          <Text className="mb-2" type="subtitle">
-            비밀번호를 잊으셨나요?
-          </Text>
-          <Text>등록하신 이메일 주소로 비밀번호를 재설정하실 수 있습니다.</Text>
-        </View>
-      </SafeAreaView>
-
-      <View className="pt-9">
+      <View className="justify-center pt-8">
+        <Text type="title" className="text-bold mb-3">
+          이메일 인증하기
+        </Text>
+        <Text
+          textColor={
+            contexts?.colorScheme === 'dark' ? 'text-white' : 'text-neutral-600'
+          }>
+          우리들만의 리그에 오신 것을 환영합니다!{`\n`}
+          가입을 위해 이메일 인증을 진행해주세요.
+        </Text>
+      </View>
+      <View className="flex-1 pt-9">
         <View className="form space-y-2 -mt-2">
           {formError ? (
             <View>
@@ -118,11 +161,18 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
               </FormProvider>
             </>
           )}
+
           <View className="pt-3">
             {timerOn && (
               <Button
                 label="확인"
-                onPress={methods.handleSubmit(onSubmit)}
+                onPress={
+                  // () =>
+                  //   navigation.navigate('Register', {
+                  //     email: methods.getValues().email,
+                  //   })
+                  methods.handleSubmit(onSubmit)
+                }
                 textColor="text-white"
                 isLoading={timerOn && !!contexts?.isMutating}
               />
@@ -134,4 +184,4 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
   );
 };
 
-export default FindPw;
+export default CheckEmail;

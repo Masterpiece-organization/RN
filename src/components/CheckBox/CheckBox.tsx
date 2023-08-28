@@ -6,7 +6,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useMainContext} from '@/context/MainContext';
+import {useMainContext} from '@/contexts/MainContext';
 
 interface CheckBoxProps {
   checked: Boolean;
@@ -29,7 +29,7 @@ const CheckBox = ({checked}: CheckBoxProps) => {
 
   const checkColor = checked
     ? contexts?.colorScheme === 'dark'
-      ? '#9ca3af'
+      ? '#222'
       : '#fff'
     : '#9ca3af';
 

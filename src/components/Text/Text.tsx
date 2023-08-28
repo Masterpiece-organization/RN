@@ -1,7 +1,7 @@
 import {Text as RNText} from 'react-native';
 import {TextType} from './Text.types';
 import {clsx} from 'clsx';
-import {useMainContext} from '@/context/MainContext';
+import {useMainContext} from '@/contexts/MainContext';
 
 const Text = ({
   textColor = undefined,
@@ -26,6 +26,10 @@ const Text = ({
     textType = defaultStyle.bodySmall;
   }
 
+  if (type === 'small') {
+    textType = defaultStyle.small;
+  }
+
   const defaultColor =
     contexts?.colorScheme === 'dark' ? 'text-white' : 'text-black';
 
@@ -45,4 +49,5 @@ const defaultStyle = {
   subtitle: 'text-lg font-medium',
   body: 'text-base',
   bodySmall: 'text-sm',
+  small: 'text-xs',
 };
