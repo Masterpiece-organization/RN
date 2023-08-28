@@ -26,6 +26,10 @@ const Text = ({
     textType = defaultStyle.bodySmall;
   }
 
+  if (type === 'small') {
+    textType = defaultStyle.small;
+  }
+
   const defaultColor =
     contexts?.colorScheme === 'dark' ? 'text-white' : 'text-black';
 
@@ -45,4 +49,5 @@ const defaultStyle = {
   subtitle: 'text-lg font-medium',
   body: 'text-base',
   bodySmall: 'text-sm',
+  small: 'text-xs',
 };
