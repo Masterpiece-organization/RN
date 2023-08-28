@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {HeaderType} from './Header.type';
-import {View, Text, useColorScheme, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import ArrowLeftIcon from '@/assets/icons/nav_arrow_left.svg';
 import Animated, {
@@ -10,9 +10,8 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import {useMainContext} from '@/context/MainContext';
-
-import Button from '../Button';
+import {useMainContext} from '@/contexts/MainContext';
+import {Text, Button} from '@components/index';
 
 const initialOffset = 0;
 
@@ -26,9 +25,6 @@ const Header = ({
 }: HeaderType & NativeStackHeaderProps) => {
   const contexts = useMainContext();
   //   const [left, center, right] = children;
-
-  const colorScheme = useColorScheme();
-
   const {navigation} = props;
 
   const offset = useSharedValue(initialOffset);
@@ -62,14 +58,14 @@ const Header = ({
 
   return (
     <View className="pt-1 ">
-      <View className="px-5 pb-3 flex flex-row items-center justify-between ">
-        <View>
+      <View className="px-5 pb-3 flex flex-row items-center">
+        <View className="flex-1 items-start">
           {left && (
             <Button
               label=""
               icon={
                 <ArrowLeftIcon
-                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  color={contexts?.colorScheme === 'dark' ? 'white' : 'black'}
                   width={28}
                   height={28}
                 />
@@ -77,17 +73,23 @@ const Header = ({
               onPress={() => navigation.goBack()}
               type="text"
               buttonColor=""
+              className="-ml-2 pr-2"
             />
           )}
         </View>
-        <View>
-          <Text>{center}</Text>
+        <View className="shrink-0 items-center justify-center mt-0.5">
+          <Text
+            className={`${
+              contexts?.colorScheme === 'dark' ? 'text-white' : 'text-black'
+            } text-center flex-1`}>
+            {center}
+          </Text>
         </View>
-        <View>{right}</View>
+        <View className="flex-1 items-end">{right}</View>
       </View>
 
       <View
-        className={` w-full ${
+        className={`w-full ${
           border
             ? contexts?.colorScheme === 'dark'
               ? 'border-neutral-600 border-b'
