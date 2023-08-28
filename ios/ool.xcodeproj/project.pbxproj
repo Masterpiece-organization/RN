@@ -123,7 +123,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 			);
-			indentWidth = 2;
+			indentWidth = 3;
 			sourceTree = "<group>";
 			tabWidth = 2;
 			usesTabs = 0;
