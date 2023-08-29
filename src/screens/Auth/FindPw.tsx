@@ -12,11 +12,13 @@ import {
 } from 'react-hook-form';
 import useTimer from '@/hooks/useTimer';
 import {useFocusEffect} from '@react-navigation/native';
+import useUser from '@/hooks/useUser';
 
 type FindPwScreenProps = StackScreenProps<RootStackParamList, 'FindPw'>;
 
 const FindPw = ({navigation}: FindPwScreenProps) => {
   const contexts = useMainContext();
+  const {checkEmailPasswordQuery, verifyAuthCodeQuery} = useUser();
 
   // useForm hook and set default behavior/values
   const {...methods} = useForm({mode: 'onSubmit'});
@@ -27,17 +29,58 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
   const {minutes, seconds} = useTimer({timerOn, setTimerOn});
 
   const checkEmail: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.authentication);
+    const {email} = data;
 
-    setTimerOn(true);
+    checkEmailPasswordQuery.mutate(
+      {email},
+      {
+        onSuccess: () => {
+          setTimerOn(true);
+        },
+        onError: err => {
+          const error = err as Error;
+
+          const message =
+            error.message === 'USER_NOT_FOUN'
+              ? '존재하지 않는 이메일입니다.'
+              : error.message;
+
+          methods.setError('email', {
+            type: 'manual',
+            message,
+          });
+        },
+      },
+    );
   };
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.authentication);
+    const {email, verificationCode} = data;
 
-    navigation.navigate('ResetPw');
+    verifyAuthCodeQuery.mutate(
+      {email, auth_number: verificationCode},
+      {
+        onSuccess: () => {
+          navigation.navigate('ResetPw', {
+            email,
+          });
+        },
+        onError: err => {
+          const error = err as Error;
+
+          const message =
+            error.message ===
+            'Verfiy resource is not found or expied of auth code'
+              ? '인증코드가 틀렸습니다. 다시 입력해 주세요!'
+              : error.message;
+
+          methods.setError('verificationCode', {
+            type: 'manual',
+            message,
+          });
+        },
+      },
+    );
   };
 
   useFocusEffect(
@@ -46,6 +89,7 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
         setTimerOn(false);
         methods.reset({});
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
