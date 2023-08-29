@@ -1,5 +1,12 @@
 import {useMutation} from '@tanstack/react-query';
-import {signUp, loginEmail, checkEmail, verifyAuthCode} from '@/api/auth';
+import {
+  signUp,
+  loginEmail,
+  checkEmail,
+  checkEmailPassword,
+  verifyAuthCode,
+  resetPassword,
+} from '@/api/auth';
 
 interface userProps {
   email: string;
@@ -36,9 +43,23 @@ export default function useUser() {
     },
   );
 
+  const checkEmailPasswordQuery = useMutation(
+    async (data: emailProps) => await checkEmailPassword(data.email),
+    {
+      onSuccess: res => res,
+    },
+  );
+
   const verifyAuthCodeQuery = useMutation(
     async (data: authProps) =>
       await verifyAuthCode(data.email, data.auth_number),
+    {
+      onSuccess: res => res,
+    },
+  );
+
+  const resetPasswordQuery = useMutation(
+    async (data: userProps) => await resetPassword(data.email, data.password),
     {
       onSuccess: res => res,
     },
@@ -48,6 +69,8 @@ export default function useUser() {
     loginQuery,
     signUpQuery,
     checkEmailQuery,
+    checkEmailPasswordQuery,
     verifyAuthCodeQuery,
+    resetPasswordQuery,
   };
 }
