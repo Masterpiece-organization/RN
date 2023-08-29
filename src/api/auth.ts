@@ -1,5 +1,9 @@
 import {SERVER_URL} from '@env';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
+
+interface ErrorResponse {
+  detail: string;
+}
 
 const baseURL = SERVER_URL;
 
@@ -18,14 +22,13 @@ export async function signUp(email: string, password: string) {
     password,
   };
 
-  console.log('----data----', data);
-
   try {
     const res = await instance.post('user/email/register', data);
     return res.data;
   } catch (err) {
-    console.log('----err----', err);
-    console.error(err);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
 
@@ -39,7 +42,9 @@ export async function loginEmail(email: string, password: string) {
     const res = await instance.post('user/email/login', data);
     return res.data;
   } catch (err) {
-    console.error(err);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
 
@@ -49,8 +54,23 @@ export async function checkEmail(email: string) {
 
     return res.data;
   } catch (err) {
-    // return (err as Error).message;
-    throw new Error(err as any);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
+  }
+}
+
+export async function checkEmailPassword(email: string) {
+  try {
+    const res = await instance.post('user/email/request/password/reset', {
+      email,
+    });
+
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
 
@@ -67,7 +87,24 @@ export async function verifyAuthCode(email: string, auth_number: number) {
 
     return res.data;
   } catch (err) {
-    // return (err as Error).message;
-    throw new Error(err as any);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
+  }
+}
+
+export async function resetPassword(email: string, password: string) {
+  const data = {
+    email,
+    password,
+  };
+
+  try {
+    const res = await instance.post('user/password/reset', data);
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
