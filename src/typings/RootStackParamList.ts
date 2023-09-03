@@ -7,8 +7,10 @@ export type RootStackParamList = {
     name: string;
   };
   FindPw: undefined;
-  ResetPw: undefined;
+  ResetPw: {email: string};
   CheckEmail: undefined;
+  Nickname: undefined;
+  Position: {nickname: string};
 };
 
 export type MainRootStackParamList = {

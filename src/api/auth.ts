@@ -1,35 +1,39 @@
-import {SERVER_URL} from '@env';
-import axios from 'axios';
+import {AxiosError, AxiosInstance} from 'axios';
 
-const baseURL = SERVER_URL;
+interface ErrorResponse {
+  detail: string;
+}
 
-const instance = axios.create({
-  baseURL,
-  headers: {
-    accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-  timeout: 1000,
-});
+interface authProps extends authEmailProps {
+  password: string;
+}
 
-export async function signUp(email: string, password: string) {
+interface authNumberProps extends authEmailProps {
+  auth_number: number;
+}
+
+interface authEmailProps {
+  email: string;
+  instance: AxiosInstance;
+}
+
+export async function signUp({email, password, instance}: authProps) {
   const data = {
     email,
     password,
   };
 
-  console.log('----data----', data);
-
   try {
     const res = await instance.post('user/email/register', data);
     return res.data;
   } catch (err) {
-    console.log('----err----', err);
-    console.error(err);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
 
-export async function loginEmail(email: string, password: string) {
+export async function loginEmail({email, password, instance}: authProps) {
   const data = {
     email,
     password,
@@ -37,37 +41,74 @@ export async function loginEmail(email: string, password: string) {
 
   try {
     const res = await instance.post('user/email/login', data);
+
     return res.data;
   } catch (err) {
-    console.error(err);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
 
-export async function checkEmail(email: string) {
+export async function checkEmail({email, instance}: authEmailProps) {
   try {
     const res = await instance.post('user/email/request/verify/code', {email});
 
     return res.data;
   } catch (err) {
-    // return (err as Error).message;
-    throw new Error(err as any);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }
 
-export async function verifyAuthCode(email: string, auth_number: number) {
+export async function checkEmailPassword({email, instance}: authEmailProps) {
+  try {
+    const res = await instance.post('user/email/request/password/reset', {
+      email,
+    });
+
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
+  }
+}
+
+export async function verifyAuthCode({
+  email,
+  auth_number,
+  instance,
+}: authNumberProps) {
   const data = {
     email,
     auth_number,
   };
-
-  console.log(data);
 
   try {
     const res = await instance.post('user/email/verify/auth/code', data);
 
     return res.data;
   } catch (err) {
-    // return (err as Error).message;
-    throw new Error(err as any);
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
+  }
+}
+
+export async function resetPassword({email, password, instance}: authProps) {
+  const data = {
+    email,
+    password,
+  };
+
+  try {
+    const res = await instance.post('user/password/reset', data);
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<ErrorResponse>;
+
+    throw new Error(error.response?.data.detail);
   }
 }

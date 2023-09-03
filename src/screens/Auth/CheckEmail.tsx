@@ -33,51 +33,56 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
   const checkEmail: SubmitHandler<FieldValues> = data => {
     const {email} = data;
 
-    // checkEmailQuery.mutate(
-    //   {email},
-    //   {
-    //     onSuccess: () => {
-    //       setTimerOn(true);
-    //     },
-    //     onError: err => {
-    //       console.log(err);
-    //       methods.setError('email', {
-    //         type: 'manual',
-    //         message: '이미 존재하는 이메일입니다.',
-    //       });
-    //     },
-    //   },
-    // );
+    checkEmailQuery.mutate(
+      {email},
+      {
+        onSuccess: () => {
+          setTimerOn(true);
+        },
+        onError: err => {
+          const error = err as Error;
 
-    setTimerOn(true);
+          const message =
+            error.message === 'email already exists.'
+              ? '이미 존재하는 이메일입니다.'
+              : error.message;
+
+          methods.setError('email', {
+            type: 'manual',
+            message,
+          });
+        },
+      },
+    );
   };
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
     const {email, verificationCode} = data;
 
-    // verifyAuthCodeQuery.mutate(
-    //   {email, auth_number: verificationCode},
-    //   {
-    //     onSuccess: () => {
-    //       navigation.navigate('Register', {
-    //         email,
-    //       });
-    //       setTimerOn(false);
-    //       methods.reset({});
-    //     },
-    //     onError: err => {
-    //       console.log(err);
-    //       methods.setError('verificationCode', {
-    //         type: 'manual',
-    //         message: '인증코드가 틀렸습니다. 다시 입력해 주세요!',
-    //       });
-    //     },
-    //   },
-    // );
+    verifyAuthCodeQuery.mutate(
+      {email, auth_number: verificationCode},
+      {
+        onSuccess: () => {
+          navigation.navigate('Register', {
+            email,
+          });
+        },
+        onError: err => {
+          const error = err as Error;
 
-    navigation.navigate('Register', {
-      email,
-    });
+          const message =
+            error.message ===
+            'Verfiy resource is not found or expied of auth code'
+              ? '인증코드가 틀렸습니다. 다시 입력해 주세요!'
+              : error.message;
+
+          methods.setError('verificationCode', {
+            type: 'manual',
+            message,
+          });
+        },
+      },
+    );
   };
 
   useFocusEffect(
@@ -86,6 +91,7 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
         setTimerOn(false);
         methods.reset({});
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
@@ -134,7 +140,13 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
                   <Button
                     label={
                       timerOn
-                        ? `${minutes}:${seconds === 0 ? '00' : seconds}`
+                        ? `${minutes}:${
+                            seconds === 0
+                              ? '00'
+                              : seconds < 10
+                              ? `0${seconds}`
+                              : seconds
+                          }`
                         : '인증요청'
                     }
                     onPress={methods.handleSubmit(checkEmail)}

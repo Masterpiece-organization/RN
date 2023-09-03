@@ -9,6 +9,8 @@ import Success from '@/screens/Auth/Success';
 import CheckEmail from '@/screens/Auth/CheckEmail';
 import FindPw from '@/screens/Auth/FindPw';
 import ResetPw from '@/screens/Auth/ResetPw';
+import Nickname from '@/screens/Auth/Nickname';
+import Position from '@/screens/Auth/Position';
 import Terms from '@/screens/Auth/Terms';
 import {HeaderWrap} from '@/components';
 
@@ -73,6 +75,18 @@ const AuthStack = () => {
           header: props => headerWrapComponent(props),
         }}
         component={ResetPw}
+      />
+      <Stack.Screen
+        name="Nickname"
+        options={{headerShown: false}}
+        component={Nickname}
+      />
+      <Stack.Screen
+        name="Position"
+        options={{
+          header: props => headerWrapComponent(props),
+        }}
+        component={Position}
       />
     </Stack.Navigator>
   );

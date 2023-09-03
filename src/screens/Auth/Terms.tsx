@@ -1,15 +1,11 @@
 import {useState} from 'react';
 import {Button, Text} from '@components/index';
-import {
-  SafeAreaView,
-  View,
-  TouchableWithoutFeedback,
-  Alert,
-} from 'react-native';
+import {SafeAreaView, View, TouchableWithoutFeedback} from 'react-native';
 import {CheckBox, Container} from '@/components';
 import {useMainContext} from '@/contexts/MainContext';
 import {RootStackParamList} from '@/typings/RootStackParamList';
 import {StackScreenProps} from '@react-navigation/stack';
+import showAlert from '@/utils/showAlert';
 
 const TERMS_DATA = [
   {
@@ -62,15 +58,13 @@ const Terms = ({navigation}: TermsScreenProps) => {
     if (ToU && personalInfor) {
       return navigation.navigate('CheckEmail');
     }
-    createAlert();
-  };
 
-  const createAlert = () => {
-    Alert.alert(
-      '이용 약관 및 개인정보 처리방침',
-      '회원가입을 위해서는 이용약관 및 개인정보 처리방침에 동의가 필요합니다.',
-      [{text: '확인', onPress: () => console.log('OK Pressed')}],
-    );
+    showAlert({
+      title: '이용 약관 및 개인정보 처리방침',
+      message:
+        '회원가입을 위해서는 이용약관 및 개인정보 처리방침에 동의가 필요합니다.',
+      onPress: () => null,
+    });
   };
 
   return (
