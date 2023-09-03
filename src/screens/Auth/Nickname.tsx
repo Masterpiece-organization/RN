@@ -14,24 +14,28 @@ import {nouns, adjectives} from '@/data/nickname';
 
 type NicknameScreenProps = StackScreenProps<RootStackParamList, 'Nickname'>;
 
-const Nickname = ({navigation, route}: NicknameScreenProps) => {
+const Nickname = ({navigation}: NicknameScreenProps) => {
   const contexts = useMainContext();
 
   const {...methods} = useForm({mode: 'onSubmit'});
 
-  const [randomName, setRandomName] = useState('');
   const [formError, setError] = useState<Boolean>(false);
 
-  const onSubmit: SubmitHandler<FieldValues> = data => {};
+  const onSubmit: SubmitHandler<FieldValues> = data => {
+    const {nickname} = data;
+
+    navigation.navigate('Position', {
+      nickname,
+    });
+  };
 
   const createNickname = () => {
     const idx1 = Math.floor(Math.random() * adjectives.length);
     const idx2 = Math.floor(Math.random() * nouns.length);
 
-    setRandomName(adjectives[idx1] + nouns[idx2]);
+    // setRandomName(adjectives[idx1] + nouns[idx2]);
+    methods.setValue('nickname', adjectives[idx1] + nouns[idx2]);
   };
-
-  const watchNickname = methods.watch('nickname');
 
   return (
     <Container>
@@ -67,10 +71,7 @@ const Nickname = ({navigation, route}: NicknameScreenProps) => {
                   placeholder="닉네임"
                   setFormError={setError}
                   className="mb-2"
-                  value={randomName || watchNickname} // <-- 랜덤 닉네임 혹은 입력한 값을 표시
-                  onChange={() => {
-                    setRandomName(''); // <-- TextInput에 직접 입력할 경우 랜덤 닉네임 초기화
-                  }}
+                  rules={{required: '닉네임을 입력해주세요.'}}
                 />
               </FormProvider>
             </>
