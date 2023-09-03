@@ -1,21 +1,8 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from 'react';
-import {ColorSchemeName, useColorScheme} from 'react-native';
+import {createContext, ReactNode, useContext, useState} from 'react';
+import {useColorScheme} from 'react-native';
 import {useIsMutating} from '@tanstack/react-query';
-
-interface ContextState {
-  colorScheme: ColorSchemeName;
-  isMutating: number;
-  user: boolean;
-  setUser: Dispatch<SetStateAction<boolean>>;
-}
-
+import {AuthStateProps, ContextState} from './context.types';
+import {resetGenericPassword} from 'react-native-keychain';
 interface ContextProps {
   children: ReactNode;
 }
@@ -27,6 +14,25 @@ export function MainContextProvider({children}: ContextProps) {
 
   const isMutating = useIsMutating();
 
+  const [authState, setAuthState] = useState<AuthStateProps>({
+    accessToken: null,
+    refreshToken: null,
+    authenticated: null,
+  });
+
+  const getAccessToken = () => {
+    return authState.accessToken;
+  };
+
+  const logout = async () => {
+    await resetGenericPassword();
+    setAuthState({
+      accessToken: null,
+      refreshToken: null,
+      authenticated: false,
+    });
+  };
+
   const [user, setUser] = useState<boolean>(false);
 
   return (
@@ -36,6 +42,10 @@ export function MainContextProvider({children}: ContextProps) {
         isMutating,
         user,
         setUser,
+        getAccessToken,
+        authState,
+        setAuthState,
+        logout,
       }}>
       {children}
     </MainContext.Provider>
