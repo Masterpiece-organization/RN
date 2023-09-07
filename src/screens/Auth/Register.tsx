@@ -18,7 +18,6 @@ const Register = ({navigation, route}: RegisterScreenProps) => {
   const contexts = useMainContext();
   const {signUpQuery} = useUser();
 
-  // useForm hook and set default behavior/values
   const {...methods} = useForm({mode: 'onSubmit'});
 
   const watchingPassword = methods.watch('password');
@@ -27,30 +26,25 @@ const Register = ({navigation, route}: RegisterScreenProps) => {
   const [param, setParam] = useState<string>('');
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.authentication);
-    // You can use the data to perform actions like logging in, etc.
-    console.log(data);
-    // const {email, password} = data;
+    const {email, password} = data;
 
-    // signUpQuery.mutate(
-    //   {email, password},
-    //   {
-    //     onSuccess: () => {
-    //       navigation.navigate('Success');
-    //     },
-    //     onError: () => {
-    //       methods.setError('confirmPassword', {
-    //         type: 'manual',
-    //         message: '에러',
-    //       });
-    //     },
-    //   },
-    // );
-
-    navigation.navigate('Success', {
-      name: 'register',
-    });
+    signUpQuery.mutate(
+      {email, password},
+      {
+        onSuccess: () => {
+          // navigation.navigate('Success', {
+          //   name: 'register',
+          // });
+          navigation.navigate('Nickname');
+        },
+        onError: () => {
+          methods.setError('confirmPassword', {
+            type: 'manual',
+            message: '에러',
+          });
+        },
+      },
+    );
   };
 
   useEffect(() => {
@@ -136,7 +130,6 @@ const Register = ({navigation, route}: RegisterScreenProps) => {
           <View className="pt-3">
             <Button
               label="회원가입"
-              // onPress={() => navigation.navigate('RegisterSuccess')}
               onPress={methods.handleSubmit(onSubmit)}
               isLoading={!!contexts?.isMutating}
             />
