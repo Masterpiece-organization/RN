@@ -24,3 +24,15 @@ export interface AuthStateProps {
   refreshToken: string | null;
   authenticated?: boolean | null;
 }
+
+interface Position {
+  seq: number;
+  join_profile: string;
+}
+interface ProfileItem {
+  position: Position;
+}
+export interface UserStateProps {
+  nickname: string;
+  join_profile: ProfileItem[];
+}
