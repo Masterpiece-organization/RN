@@ -1,7 +1,7 @@
 import {createContext, ReactNode, useContext, useState} from 'react';
 import {useColorScheme} from 'react-native';
 import {useIsMutating} from '@tanstack/react-query';
-import {AuthStateProps, ContextState} from './context.types';
+import {AuthStateProps, ContextState, UserStateProps} from './context.types';
 import {resetGenericPassword} from 'react-native-keychain';
 interface ContextProps {
   children: ReactNode;
@@ -20,6 +20,11 @@ export function MainContextProvider({children}: ContextProps) {
     authenticated: null,
   });
 
+  const [user, setUser] = useState<UserStateProps>({
+    nickname: '',
+    join_profile: [],
+  });
+
   const getAccessToken = () => {
     return authState.accessToken;
   };
@@ -32,8 +37,6 @@ export function MainContextProvider({children}: ContextProps) {
       authenticated: false,
     });
   };
-
-  const [user, setUser] = useState<boolean>(false);
 
   return (
     <MainContext.Provider
