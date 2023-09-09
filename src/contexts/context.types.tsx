@@ -5,8 +5,8 @@ import {ColorSchemeName} from 'react-native';
 export interface ContextState {
   colorScheme: ColorSchemeName;
   isMutating: number;
-  user: boolean;
-  setUser: Dispatch<SetStateAction<boolean>>;
+  user: UserStateProps;
+  setUser: Dispatch<SetStateAction<UserStateProps>>;
   getAccessToken: () => void;
   authState: AuthStateProps;
   setAuthState: Dispatch<SetStateAction<AuthStateProps>>;
