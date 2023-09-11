@@ -2,6 +2,7 @@ import {useMutation} from '@tanstack/react-query';
 import {
   signUp,
   loginEmail,
+  getUserInfo,
   checkEmail,
   checkEmailPassword,
   verifyAuthCode,
@@ -28,7 +29,7 @@ interface authProps extends emailProps {
 export default function useUser() {
   const contexts = useApiContext();
   const mainContexts = useMainContext();
-  // const authInstance = contexts?.authInstance;
+  const authInstance = contexts?.authInstance as AxiosInstance;
   const instance = contexts?.instance as AxiosInstance;
 
   const loginQuery = useMutation(
@@ -53,6 +54,23 @@ export default function useUser() {
             refreshToken,
           }),
         );
+      },
+    },
+  );
+
+  const getUserInfoQuery = useMutation(
+    async () => {
+      return await getUserInfo(authInstance);
+    },
+    {
+      onSuccess: async res => {
+        console.log(res);
+
+        mainContexts?.setUser({
+          email: res?.email,
+          nickname: res.profile[0].nickname,
+          join_profile: res.profile[0].join_profile,
+        });
       },
     },
   );
@@ -109,6 +127,7 @@ export default function useUser() {
 
   return {
     loginQuery,
+    getUserInfoQuery,
     signUpQuery,
     checkEmailQuery,
     checkEmailPasswordQuery,

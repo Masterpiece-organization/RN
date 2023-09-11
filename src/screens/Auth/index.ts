@@ -1,0 +1,9 @@
+export {default as Login} from './Login';
+export {default as Register} from './Register';
+export {default as Nickname} from './Nickname';
+export {default as Position} from './Position';
+export {default as Success} from './Success';
+export {default as CheckEmail} from './CheckEmail';
+export {default as FindPw} from './FindPw';
+export {default as ResetPw} from './ResetPw';
+export {default as Terms} from './Terms';

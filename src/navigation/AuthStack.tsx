@@ -3,16 +3,18 @@ import {
   NativeStackHeaderProps,
 } from '@react-navigation/native-stack';
 import Home from '@/screens/Home/Home';
-import Login from '@/screens/Auth/Login';
-import Register from '@/screens/Auth/Register';
-import Success from '@/screens/Auth/Success';
-import CheckEmail from '@/screens/Auth/CheckEmail';
-import FindPw from '@/screens/Auth/FindPw';
-import ResetPw from '@/screens/Auth/ResetPw';
-import Nickname from '@/screens/Auth/Nickname';
-import Position from '@/screens/Auth/Position';
-import Terms from '@/screens/Auth/Terms';
 import {HeaderWrap} from '@/components';
+import {
+  Login,
+  Register,
+  Success,
+  CheckEmail,
+  FindPw,
+  ResetPw,
+  Nickname,
+  Position,
+  Terms,
+} from '@/screens/Auth';
 
 import {RootStackParamList} from '@/typings/RootStackParamList';
 

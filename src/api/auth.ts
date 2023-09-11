@@ -50,6 +50,20 @@ export async function loginEmail({email, password, instance}: authProps) {
   }
 }
 
+export async function getUserInfo(instance: AxiosInstance) {
+  try {
+    const res = await instance.get('user/me');
+
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<ErrorResponse>;
+
+    console.log('error!!!', error.response?.data.detail);
+
+    throw new Error(error.response?.data.detail);
+  }
+}
+
 export async function checkEmail({email, instance}: authEmailProps) {
   try {
     const res = await instance.post('user/email/request/verify/code', {email});
