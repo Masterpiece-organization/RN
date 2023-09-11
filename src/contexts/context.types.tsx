@@ -33,6 +33,7 @@ interface ProfileItem {
   position: Position;
 }
 export interface UserStateProps {
+  email: string;
   nickname: string;
   join_profile: ProfileItem[];
 }
