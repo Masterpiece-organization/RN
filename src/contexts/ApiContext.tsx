@@ -33,9 +33,9 @@ export const ApiProvider = ({children}: ContextProps) => {
   authInstance.interceptors.request.use(
     config => {
       if (!config.headers.Authorization) {
-        config.headers.Authorization = `Bearer ${authContext?.getAccessToken()}`;
+        // config.headers.Authorization = `Bearer ${authContext?.getAccessToken()}`;
+        config.headers.bearer = `${authContext?.getAccessToken()}`;
       }
-      console.log('---config----', config);
       return config;
     },
     error => {
@@ -47,7 +47,7 @@ export const ApiProvider = ({children}: ContextProps) => {
     response: {config: {headers: {Authorization: string}}};
   }) => {
     const data = {
-      refreshToken: authContext?.authState.refreshToken,
+      refresh_token: authContext?.authState.refreshToken,
     };
 
     const options = {
@@ -74,12 +74,6 @@ export const ApiProvider = ({children}: ContextProps) => {
             }),
           );
 
-          console.log(
-            '-----accessToken, refreshToken-----',
-            tokenRefreshResponse.data.accessToken,
-            authContext?.authState.refreshToken,
-          );
-
           return Promise.resolve();
         })
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -88,6 +82,7 @@ export const ApiProvider = ({children}: ContextProps) => {
             accessToken: null,
             refreshToken: null,
           });
+          Keychain.resetGenericPassword();
         })
     );
   };
