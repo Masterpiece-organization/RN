@@ -14,5 +14,17 @@ export type RootStackParamList = {
 };
 
 export type MainRootStackParamList = {
-  Main: undefined;
+  Tabs: undefined;
 };
+
+export type MainRootTabsParamList = {
+  Main: undefined;
+  Matches: undefined;
+  Team: undefined;
+  Profile: undefined;
+};
+
+export interface BottomIconWrapTypes {
+  color: string;
+  focused: boolean;
+}
