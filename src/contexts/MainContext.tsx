@@ -21,6 +21,7 @@ export function MainContextProvider({children}: ContextProps) {
   });
 
   const [user, setUser] = useState<UserStateProps>({
+    email: '',
     nickname: '',
     join_profile: [],
   });
