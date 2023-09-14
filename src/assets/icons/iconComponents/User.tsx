@@ -4,12 +4,13 @@ import {SvgIconProps} from '@/typings/IconTypeList';
 const User = ({
   fillColor = 'none',
   strokeColor = 'currentColor',
+  focused,
 }: SvgIconProps) => {
   return (
     <Svg
-      width="24px"
-      height="24px"
-      stroke-width="1.5"
+      width={focused ? '26' : '24'}
+      height={focused ? '26' : '24'}
+      strokeWidth="1.5"
       viewBox="0 0 24 24"
       fill={fillColor}>
       <Path
