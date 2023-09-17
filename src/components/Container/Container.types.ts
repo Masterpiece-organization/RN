@@ -2,5 +2,6 @@ import {ReactNode} from 'react';
 
 export interface ContainerType {
   scroll?: boolean;
+  horizontal?: boolean;
   children: ReactNode;
 }
