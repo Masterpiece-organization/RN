@@ -5,6 +5,7 @@ import Loader from '../Loader';
 import {clsx} from 'clsx';
 import {useMainContext} from '@/contexts/MainContext';
 import Text from '../Text';
+import {rowCenter} from '@/theme';
 
 const Button = ({
   label,
@@ -17,6 +18,7 @@ const Button = ({
   isLoading = false,
   icon = null,
   className,
+  buttonWrap,
 }: ButtonType) => {
   const contexts = useMainContext();
 
@@ -40,6 +42,8 @@ const Button = ({
 
   const textStyle = clsx(textColor ?? defaultStyle.textColor, textSize);
 
+  const buttonWrapStyle = clsx(rowCenter, buttonWrap);
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -48,9 +52,9 @@ const Button = ({
       {isLoading ? (
         <Loader color={textStyle} />
       ) : (
-        <View className="items-center justify-center flex-row">
-          {icon}
+        <View className={buttonWrapStyle}>
           <Text className={textStyle}>{label}</Text>
+          {icon}
         </View>
       )}
     </TouchableOpacity>
