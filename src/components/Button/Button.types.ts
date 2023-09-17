@@ -12,4 +12,5 @@ export interface ButtonType {
   isLoading?: boolean;
   icon?: ReactNode;
   className?: string;
+  buttonWrap?: string;
 }
