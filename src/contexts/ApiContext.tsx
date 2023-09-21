@@ -33,8 +33,7 @@ export const ApiProvider = ({children}: ContextProps) => {
   authInstance.interceptors.request.use(
     config => {
       if (!config.headers.Authorization) {
-        // config.headers.Authorization = `Bearer ${authContext?.getAccessToken()}`;
-        config.headers.bearer = `${authContext?.getAccessToken()}`;
+        config.headers.Authorization = `Bearer ${authContext?.getAccessToken()}`;
       }
       return config;
     },
