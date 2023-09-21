@@ -7,13 +7,13 @@ module.exports = {
     // },
     extend: {
       backgroundColor: {
-        black: '#222', // 변경하려는 새로운 색상 값
+        black: '#121212', // 변경하려는 새로운 색상 값
       },
       borderColor: {
-        black: '#222', // 변경하려는 새로운 색상 값
+        black: '#121212', // 변경하려는 새로운 색상 값
       },
       textColor: {
-        black: '#222', // 변경하려는 새로운 색상 값
+        black: '#121212', // 변경하려는 새로운 색상 값
       },
     },
   },
