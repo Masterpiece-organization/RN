@@ -19,6 +19,10 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
   const getHeaderData = ({
     colorScheme,
   }: GetHeaderDataType): Record<string, HeaderDataType> => ({
+    Login: {
+      left: true,
+      border: false,
+    },
     Terms: {
       left: true,
       border: true,
@@ -81,7 +85,7 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
   const headerData = getHeaderData({colorScheme: contexts?.colorScheme})[name];
 
   return (
-    <SafeAreaView className="bg-white dark:bg-black border-b border-neutral-300 dark:border-neutral-600">
+    <SafeAreaView className="bg-white dark:bg-black">
       <Header {...headerData} {...props} />
     </SafeAreaView>
   );
