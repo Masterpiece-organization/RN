@@ -15,6 +15,7 @@ export type RootStackParamList = {
 
 export type MainRootStackParamList = {
   Tabs: undefined;
+  Setting: undefined;
 };
 
 export type MainRootTabsParamList = {
