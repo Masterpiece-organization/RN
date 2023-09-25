@@ -8,3 +8,4 @@ export {default as Container} from './Container';
 export {default as Avatar} from './Avatar';
 export {default as ImagePickerModal} from './ImagePickerModal';
 export {default as Card} from './Card';
+export {default as TitleSection} from './TitleSection';

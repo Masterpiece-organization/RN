@@ -1,3 +1,4 @@
+import {EditProfile} from '@/screens/Setting/EditProfile';
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
@@ -11,6 +12,8 @@ export type RootStackParamList = {
   CheckEmail: undefined;
   Nickname: undefined;
   Position: {nickname: string};
+  Profile: undefined;
+  EditProfile: undefined;
 };
 
 export type MainRootStackParamList = {
