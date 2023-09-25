@@ -80,6 +80,11 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
       border: false,
       center: '설정',
     },
+    EditProfile: {
+      left: true,
+      border: false,
+      center: '프로필 수정',
+    },
   });
 
   const headerData = getHeaderData({colorScheme: contexts?.colorScheme})[name];
