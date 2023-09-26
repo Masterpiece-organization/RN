@@ -1,8 +1,14 @@
-import {useState} from 'react';
-import {View, SafeAreaView} from 'react-native';
+import {useState, useCallback} from 'react';
+import {View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '@/typings/RootStackParamList';
-import {Button, Text, TextInput, Container} from '@components/index';
+import {
+  Button,
+  Text,
+  TextInput,
+  Container,
+  TitleSection,
+} from '@components/index';
 import {useMainContext} from '@/contexts/MainContext';
 import {
   useForm,
@@ -11,11 +17,31 @@ import {
   FieldValues,
 } from 'react-hook-form';
 import {nouns, adjectives} from '@/data/nickname';
+import {defaultMargin, colorBasedOnTheme} from '@/theme';
 
 type NicknameScreenProps = StackScreenProps<RootStackParamList, 'Nickname'>;
 
 const Nickname = ({navigation}: NicknameScreenProps) => {
   const contexts = useMainContext();
+  const colorScheme = contexts?.colorScheme;
+
+  const colorThemes = useCallback(() => {
+    const borderColor = colorBasedOnTheme(
+      colorScheme,
+      'border-neutral-600',
+      'border-neutral-300',
+    );
+
+    const textColor = colorBasedOnTheme(
+      colorScheme,
+      'text-white',
+      'text-black',
+    );
+
+    return {borderColor, textColor};
+  }, [colorScheme]);
+
+  const {borderColor, textColor} = colorThemes();
 
   const {...methods} = useForm({mode: 'onSubmit'});
 
@@ -38,22 +64,11 @@ const Nickname = ({navigation}: NicknameScreenProps) => {
   };
 
   return (
-    <Container>
-      <SafeAreaView className="flex">
-        <View className="justify-center pt-8 ">
-          <Text type="title" className="text-bold mb-3">
-            닉네임 정하기
-          </Text>
-          <Text
-            textColor={
-              contexts?.colorScheme === 'dark'
-                ? 'text-white'
-                : 'text-neutral-600'
-            }>
-            우리들만의 리그에서 불릴 멋진 닉네임을 정해주세요.
-          </Text>
-        </View>
-      </SafeAreaView>
+    <Container className={defaultMargin}>
+      <TitleSection
+        title="닉네임 정하기"
+        body="우리들만의 리그에서 불릴 멋진 닉네임을 정해주세요."
+      />
 
       <View className="flex-1 pt-9">
         <View className="form -mt-2">
@@ -89,13 +104,9 @@ const Nickname = ({navigation}: NicknameScreenProps) => {
               onPress={createNickname}
               isLoading={!!contexts?.isMutating}
               type="outlined"
-              buttonColor={
-                contexts?.colorScheme === 'dark' ? 'bg-neutral-700' : ''
-              }
-              className="border-neutral-300"
-              textColor={
-                contexts?.colorScheme === 'dark' ? 'bg-neutral-700' : ''
-              }
+              buttonColor=""
+              className={borderColor}
+              textColor={textColor}
             />
           </View>
         </View>
