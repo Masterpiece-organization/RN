@@ -57,8 +57,8 @@ const Header = ({
   }, []);
 
   return (
-    <View className="pt-1 ">
-      <View className="px-5 pb-3 flex flex-row items-center">
+    <View className="pt-1">
+      <View className="flex flex-row items-center px-5 pb-3">
         <View className="flex-1 items-start">
           {left && (
             <Button
@@ -77,11 +77,11 @@ const Header = ({
             />
           )}
         </View>
-        <View className="shrink-0 items-center justify-center mt-0.5">
+        <View className="mt-0.5 shrink-0 items-center justify-center">
           <Text
             className={`${
               contexts?.colorScheme === 'dark' ? 'text-white' : 'text-black'
-            } text-center flex-1`}>
+            } flex-1 text-center`}>
             {center}
           </Text>
         </View>
@@ -92,8 +92,8 @@ const Header = ({
         className={`w-full ${
           border
             ? contexts?.colorScheme === 'dark'
-              ? 'border-neutral-600 border-b'
-              : 'border-neutral-300 border-b'
+              ? 'border-b border-neutral-600'
+              : 'border-b border-neutral-300'
             : ''
         }`}>
         <Animated.View
