@@ -1,4 +1,11 @@
-import {View, SafeAreaView, Image, FlatList, Dimensions} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Image,
+  FlatList,
+  Dimensions,
+  Pressable,
+} from 'react-native';
 import {useState} from 'react';
 import {
   Text,
@@ -15,6 +22,9 @@ import ArrowRightIcon from '@/assets/icons/arrow_right.svg';
 import useCamera from '@/hooks/useCamera';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import {colorBasedOnTheme} from '@/theme';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootStackParamList} from '@/typings/RootStackParamList';
+import {defaultMargin} from '@/theme';
 
 const DATA = [
   {
@@ -54,7 +64,9 @@ const DATA = [
 const ScreenWidth = Dimensions.get('window').width; // 현재 화면의 너비 가져오기
 const OneQuarterWidth = ScreenWidth / 6; // 현재 화면 너비의 1/4
 
-const Profile = () => {
+type ProfileScreenProps = StackScreenProps<RootStackParamList, 'Profile'>;
+
+const Profile = ({navigation}: ProfileScreenProps) => {
   const contexts = useMainContext();
   const colorScheme = contexts?.colorScheme;
   const fillColor = colorBasedOnTheme(colorScheme, 'white', '#121212');
@@ -136,7 +148,7 @@ const Profile = () => {
   //   ]);
 
   return (
-    <Container horizontal>
+    <Container horizontal className={`${defaultMargin}`}>
       <ImagePickerModal
         isVisible={isModalVisible}
         setIsVisible={setIsModalVisible}
@@ -144,39 +156,34 @@ const Profile = () => {
         onCameraPress={onCameraPress}
       />
       <SafeAreaView className="flex">
-        <Card className="px-5">
-          <View className="flex-row items-center">
-            <Avatar
-              pickerResponse={pickerResponse}
-              handleOnPress={handleImagePickerModal}
-            />
-            <View>
-              <Text type="subtitle" className="mb-2">
-                지네딘 지단
-              </Text>
-              <View className="flex-row gap-2">
-                <View>
-                  <Text type="bodySmall" textColor="text-neutral-400">
-                    ST
-                  </Text>
-                </View>
-                <View>
-                  <Text type="bodySmall" textColor="text-neutral-400">
-                    CAM
-                  </Text>
-                </View>
-                <View>
-                  <Text type="bodySmall" textColor="text-neutral-400">
-                    CM
-                  </Text>
+        <Pressable onPress={() => navigation.navigate('EditProfile')}>
+          <Card className="flex-row items-center justify-between rounded-lg px-5">
+            <View className="flex-row items-center">
+              <Avatar
+                className="mr-6 h-16 w-16"
+                pickerResponse={pickerResponse}
+                handleOnPress={handleImagePickerModal}
+              />
+              <View>
+                <Text type="subtitle" className="mb-2">
+                  지네딘 지단
+                </Text>
+                <View className="flex-row gap-2">
+                  <View>
+                    <Text type="bodySmall" textColor="text-neutral-400">
+                      ST / CAM / CM
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-        </Card>
+            <ArrowRightIcon color="#A3A3A3" width={24} />
+          </Card>
+        </Pressable>
       </SafeAreaView>
       <View>
         <Card
+          className="rounded-lg"
           title="경기이력"
           titleButton={
             <View className="flex-row">
@@ -188,7 +195,7 @@ const Profile = () => {
               </View>
             </View>
           }>
-          <View className="px-5 pt-4">
+          <View className="px-5 pt-3">
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center">
                 <View className="mr-4 h-8 w-8 rounded-full border border-neutral-600">
@@ -215,9 +222,9 @@ const Profile = () => {
                 </Text>
               </View>
             </View>
-            <View className="flex-row items-center justify-between pt-3 ">
+            <View className="flex-row items-center justify-between pt-3">
               <View className="flex-row items-center">
-                <View className="mr-4 h-8 w-8 rounded-full border border-neutral-600">
+                <View className="mr-4 h-8 w-8 rounded-full border border-neutral-600 ">
                   <Image
                     source={require('@/assets/images/logo.png')}
                     className="h-full w-full"
@@ -245,6 +252,7 @@ const Profile = () => {
         </Card>
 
         <Card
+          className="rounded-lg"
           title="나의 소속팀"
           titleButton={
             <Button
@@ -262,7 +270,7 @@ const Profile = () => {
               }
             />
           }>
-          <View className="pt-4">
+          <View className="pt-3">
             <FlatList
               className="px-4"
               data={DATA}
