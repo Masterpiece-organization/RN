@@ -15,6 +15,7 @@ export const borderBottomStyle =
   'border-b border-neutral-300 dark:border-b-neutral-600';
 // Spacing
 export const cardGap = 'mt-4 py-4';
+export const defaultMargin = 'mx-5';
 // Flex
 export const rowCenter = 'items-center justify-center flex-row';
 
