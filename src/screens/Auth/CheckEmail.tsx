@@ -1,6 +1,6 @@
 import {useState, useCallback} from 'react';
 import {View} from 'react-native';
-import {Container, Text, TextInput, Button} from '@/components';
+import {Container, Text, TextInput, Button, TitleSection} from '@/components';
 import {
   useForm,
   FormProvider,
@@ -13,7 +13,7 @@ import {RootStackParamList} from '@/typings/RootStackParamList';
 import {StackScreenProps} from '@react-navigation/stack';
 import useTimer from '@/hooks/useTimer';
 import {useFocusEffect} from '@react-navigation/native';
-
+import {defaultMargin} from '@/theme';
 export type CheckEmailScreenProps = StackScreenProps<
   RootStackParamList,
   'CheckEmail'
@@ -42,10 +42,7 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
         onError: err => {
           const error = err as Error;
 
-          const message =
-            error.message === 'email already exists.'
-              ? '이미 존재하는 이메일입니다.'
-              : error.message;
+          const message = error.message;
 
           methods.setError('email', {
             type: 'manual',
@@ -70,11 +67,7 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
         onError: err => {
           const error = err as Error;
 
-          const message =
-            error.message ===
-            'Verfiy resource is not found or expied of auth code'
-              ? '인증코드가 틀렸습니다. 다시 입력해 주세요!'
-              : error.message;
+          const message = error.message;
 
           methods.setError('verificationCode', {
             type: 'manual',
@@ -96,21 +89,15 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
   );
 
   return (
-    <Container>
-      <View className="justify-center pt-8">
-        <Text type="title" className="text-bold mb-3">
-          이메일 인증하기
-        </Text>
-        <Text
-          textColor={
-            contexts?.colorScheme === 'dark' ? 'text-white' : 'text-neutral-600'
-          }>
-          우리들만의 리그에 오신 것을 환영합니다!{`\n`}
-          가입을 위해 이메일 인증을 진행해주세요.
-        </Text>
-      </View>
+    <Container className={defaultMargin}>
+      <TitleSection
+        title="이메일 인증하기"
+        // eslint-disable-next-line quotes
+        body={`우리들만의 리그에 오신 것을 환영합니다!\n가입을 위해 이메일 인증을 진행해주세요.`}
+      />
+
       <View className="flex-1 pt-9">
-        <View className="form space-y-2 -mt-2">
+        <View className="form -mt-2 space-y-2">
           {formError ? (
             <View>
               <Text textColor="text-red">
@@ -120,7 +107,7 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
           ) : (
             <>
               <FormProvider {...methods}>
-                <View className="flex-row items-starti">
+                <View className="items-starti flex-row">
                   <TextInput
                     name="email"
                     placeholder="이메일 주소"
@@ -152,7 +139,7 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
                     onPress={methods.handleSubmit(checkEmail)}
                     textColor="text-white"
                     textSize="text-xs"
-                    className="flex-auto ml-2 h-12"
+                    className="ml-2 h-12 flex-auto"
                     isLoading={!timerOn && !!contexts?.isMutating}
                     disabled={timerOn}
                   />
