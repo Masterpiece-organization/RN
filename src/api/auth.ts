@@ -1,7 +1,17 @@
-import {AxiosError, AxiosInstance} from 'axios';
+import {
+  AxiosError,
+  AxiosInstance,
+  isAxiosError as isErrorfromAxios,
+} from 'axios';
 
 interface ErrorResponse {
-  detail: string;
+  // data: string;
+  error: {
+    status_code: number;
+    system_code: string | null;
+    system_message: string | null;
+    user_message: string;
+  };
 }
 
 interface authProps extends authEmailProps {
@@ -17,6 +27,16 @@ interface authEmailProps {
   instance: AxiosInstance;
 }
 
+const isAxiosError = (err: AxiosError) => {
+  if (isErrorfromAxios(err)) {
+    const error = err as AxiosError<ErrorResponse>;
+    if (error && error.response) {
+      // TODO 에러메시지 확인후수정
+      throw new Error(error.response.data.error.user_message);
+    }
+  }
+};
+
 export async function signUp({email, password, instance}: authProps) {
   const data = {
     email,
@@ -27,9 +47,10 @@ export async function signUp({email, password, instance}: authProps) {
     const res = await instance.post('user/email/register', data);
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
 
@@ -44,9 +65,10 @@ export async function loginEmail({email, password, instance}: authProps) {
 
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
 
@@ -56,11 +78,10 @@ export async function getUserInfo(instance: AxiosInstance) {
 
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    console.log('error!!!', error.response?.data.detail);
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
 
@@ -70,9 +91,10 @@ export async function checkEmail({email, instance}: authEmailProps) {
 
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
 
@@ -84,9 +106,10 @@ export async function checkEmailPassword({email, instance}: authEmailProps) {
 
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
 
@@ -105,9 +128,10 @@ export async function verifyAuthCode({
 
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
 
@@ -121,8 +145,9 @@ export async function resetPassword({email, password, instance}: authProps) {
     const res = await instance.post('user/password/reset', data);
     return res.data;
   } catch (err) {
-    const error = err as AxiosError<ErrorResponse>;
-
-    throw new Error(error.response?.data.detail);
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
   }
 }
