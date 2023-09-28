@@ -7,6 +7,7 @@ import {
   CameraOptions,
 } from 'react-native-image-picker';
 import {Dispatch, SetStateAction, useCallback} from 'react';
+import showAlert from '@/utils/showAlert';
 
 interface UseCameraPropsType {
   setPickerResponse: Dispatch<SetStateAction<ImagePickerResponse | null>>;
@@ -30,6 +31,7 @@ const useCamera = ({
         setIsModalVisible(false);
       } else if (res.errorCode) {
         console.log('ImagePickerError: ', res.errorMessage);
+        showError('앨범에 접근할수업습니다. 잠시후 다시 시도해주세요.');
       } else {
         setPickerResponse(res);
         setIsModalVisible(false);
@@ -40,6 +42,14 @@ const useCamera = ({
       }
     });
   }, []);
+
+  const showError = (message: string) => {
+    showAlert({
+      title: '',
+      message,
+      onPress: () => null,
+    });
+  };
 
   const onCameraPress = useCallback(() => {
     const options: CameraOptions = {
@@ -54,6 +64,7 @@ const useCamera = ({
         setIsModalVisible(false);
       } else if (res.errorCode) {
         console.log('ImagePicker Error: ', res.errorMessage);
+        showError('카메라를 사용할수없습니다. 잠시후 다시 시도해주세요.');
       } else {
         setPickerResponse(res);
         setIsModalVisible(false);
