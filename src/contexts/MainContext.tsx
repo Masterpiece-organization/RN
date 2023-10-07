@@ -17,7 +17,7 @@ export function MainContextProvider({children}: ContextProps) {
   const [authState, setAuthState] = useState<AuthStateProps>({
     accessToken: null,
     refreshToken: null,
-    authenticated: null,
+    authenticated: false,
   });
 
   const [user, setUser] = useState<UserStateProps>({
