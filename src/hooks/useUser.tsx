@@ -3,6 +3,7 @@ import {
   signUp,
   loginEmail,
   getUserInfo,
+  updateUserInfo,
   checkEmail,
   checkEmailPassword,
   verifyAuthCode,
@@ -26,6 +27,11 @@ interface authProps extends emailProps {
   auth_number: number;
 }
 
+interface userInfoProps {
+  nickname: string;
+  position: number[];
+}
+
 export default function useUser() {
   const contexts = useApiContext();
   const mainContexts = useMainContext();
@@ -40,6 +46,7 @@ export default function useUser() {
     {
       onSuccess: async res => {
         const {access_token: accessToken, refresh_token: refreshToken} = res;
+        console.log(res);
 
         mainContexts?.setAuthState({
           accessToken,
@@ -54,24 +61,48 @@ export default function useUser() {
             refreshToken,
           }),
         );
+
+        await getUserInfoQuery();
       },
     },
   );
 
-  const getUserInfoQuery = useMutation(
-    async () => {
-      return await getUserInfo(authInstance);
+  const getUserInfoQuery = async () => {
+    const res = await getUserInfo(authInstance);
+
+    mainContexts?.setUser({
+      email: res?.email,
+      nickname: res.profile[0].nickname,
+      join_profile: res.profile[0].join_profile,
+    });
+  };
+
+  // const getUserInfoQuery = useMutation(
+  //   async () => {
+  //     return await getUserInfo(authInstance);
+  //   },
+  //   {
+  //     onSuccess: async res => {
+  //       console.log('호출이되야하는데?');
+  //       console.log(res);
+
+  //       mainContexts?.setUser({
+  //         email: res?.email,
+  //         nickname: res.profile[0].nickname,
+  //         join_profile: res.profile[0].join_profile,
+  //       });
+  //     },
+  //   },
+  // );
+
+  const updateUserInfoQuery = useMutation(
+    async (data: userInfoProps) => {
+      const {nickname, position} = data;
+
+      return await updateUserInfo({nickname, position, instance: authInstance});
     },
     {
-      onSuccess: async res => {
-        console.log(res);
-
-        mainContexts?.setUser({
-          email: res?.email,
-          nickname: res.profile[0].nickname,
-          join_profile: res.profile[0].join_profile,
-        });
-      },
+      onSuccess: res => res,
     },
   );
 
@@ -128,6 +159,7 @@ export default function useUser() {
   return {
     loginQuery,
     getUserInfoQuery,
+    updateUserInfoQuery,
     signUpQuery,
     checkEmailQuery,
     checkEmailPasswordQuery,

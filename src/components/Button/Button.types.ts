@@ -6,7 +6,7 @@ export interface ButtonType {
   textColor?: string;
   textSize?: string;
   textStyle?: object;
-  onPress: () => void;
+  onPress?: () => void;
   type?: 'text' | 'outlined' | 'primary';
   disabled?: boolean;
   isLoading?: boolean;

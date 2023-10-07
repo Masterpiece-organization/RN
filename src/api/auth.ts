@@ -27,6 +27,12 @@ interface authEmailProps {
   instance: AxiosInstance;
 }
 
+interface userInfoProps {
+  nickname: string;
+  position: number[];
+  instance: AxiosInstance;
+}
+
 const isAxiosError = (err: AxiosError) => {
   if (isErrorfromAxios(err)) {
     const error = err as AxiosError<ErrorResponse>;
@@ -79,6 +85,27 @@ export async function getUserInfo(instance: AxiosInstance) {
     return res.data;
   } catch (err) {
     if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
+  }
+}
+
+export async function updateUserInfo({
+  nickname,
+  position,
+  instance,
+}: userInfoProps) {
+  const data = {
+    nickname,
+    position,
+  };
+  try {
+    const res = await instance.patch('user/me', data);
+    return res.data;
+  } catch (err) {
+    if (isErrorfromAxios(err)) {
+      console.log(err);
       return isAxiosError(err);
     }
     console.error(err);
