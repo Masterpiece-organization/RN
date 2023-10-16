@@ -64,9 +64,9 @@ const Button = ({
 export default Button;
 
 const defaultStyle = {
-  baseButton: 'w-100 h-12 justify-center items-center rounded-lg flex-row',
+  baseButton: 'w-100 h-[52px] justify-center items-center rounded-lg flex-row',
   textButton: '',
   outlinedButton:
-    'w-100 h-12 justify-center items-center rounded-lg flex-row border',
+    'w-100 h-[52px] justify-center items-center rounded-lg flex-row border',
   textColor: 'text-white',
 };
