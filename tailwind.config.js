@@ -2,18 +2,85 @@
 module.exports = {
   content: ['./App.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    // colors: {
-    //   black: '#222222',
-    // },
     extend: {
       backgroundColor: {
-        black: '#121212', // 변경하려는 새로운 색상 값
+        black: '#121212',
+        gray: {
+          800: '#404040',
+          600: '#B0B0B0',
+          400: '#E4E4E4',
+          200: '#F0F0F0',
+        },
+        primary: '#9866F4',
+        'light-red': '#AC1E11',
+        'dark-red': '#EA3829',
+        yellow: '#FFBB33',
+        'light-green': '#008556',
+        'dark-green': '#00AD71',
+        'light-blue': '#006CE0',
+        'dark-blue': '#3D9BFF',
       },
       borderColor: {
-        black: '#121212', // 변경하려는 새로운 색상 값
+        black: '#121212',
+        gray: {
+          800: '#404040',
+          600: '#B0B0B0',
+          400: '#E4E4E4',
+          200: '#F0F0F0',
+        },
+        primary: '#9866F4',
+        'light-red': '#AC1E11',
+        'dark-red': '#EA3829',
+        yellow: '#FFBB33',
+        'light-green': '#008556',
+        'dark-green': '#00AD71',
+        'light-blue': '#006CE0',
+        'dark-blue': '#3D9BFF',
       },
       textColor: {
-        black: '#121212', // 변경하려는 새로운 색상 값
+        black: '#121212',
+        gray: {
+          800: '#404040',
+          600: '#B0B0B0',
+          400: '#E4E4E4',
+          200: '#F0F0F0',
+        },
+        primary: '#9866F4',
+
+        'light-red': '#AC1E11',
+        'dark-red': '#EA3829',
+        yellow: '#FFBB33',
+        'light-green': '#008556',
+        'dark-green': '#00AD71',
+        'light-blue': '#006CE0',
+        'dark-blue': '#3D9BFF',
+      },
+      fontFamily: {
+        titleLight: ['GmarketSansLight'],
+        titleMedium: ['GmarketSansMedium'],
+        titleBold: ['GmarketSansBold'],
+        bodyUltraLight: ['AppleSDGothicNeo-UltraLight'],
+        bodyLight: ['AppleSDGothicNeo-Light'],
+        bodyMedium: ['AppleSDGothicNeo-Medium'],
+        bodyLightEng: ['SFProText-Light'],
+      },
+      margin: {
+        xs: '10px',
+        sm: '16px',
+        base: '20px',
+        md: '22px',
+        lg: '30px',
+        xl: '36px',
+        xxl: '86px',
+      },
+      padding: {
+        xs: '10px',
+        sm: '16px',
+        base: '20px',
+        md: '22px',
+        lg: '30px',
+        xl: '36px',
+        xxl: '86px',
       },
     },
   },
