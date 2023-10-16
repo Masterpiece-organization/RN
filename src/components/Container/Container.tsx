@@ -14,19 +14,21 @@ const Container = ({
 }: ContainerType) => {
   if (horizontal)
     return (
-      <SafeAreaView className={`${className} flex-1`}>{children}</SafeAreaView>
+      <SafeAreaView className={`${className} mt-xl flex-1`}>
+        {children}
+      </SafeAreaView>
     );
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       {scroll ? (
         <ScrollView contentContainerStyle={{paddingBottom: 50}}>
-          <SafeAreaView className={`${className} flex-1`}>
+          <SafeAreaView className={`${className} mt-xl flex-1`}>
             {children}
           </SafeAreaView>
         </ScrollView>
       ) : (
-        <SafeAreaView className={`${className} flex-1`}>
+        <SafeAreaView className={`${className} mt-xl flex-1`}>
           {children}
         </SafeAreaView>
       )}
