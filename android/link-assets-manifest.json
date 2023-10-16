@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/AppleSDGothicNeo-Light.otf",
+      "sha1": "cfa41d328e3271aa5a0dcd1dcc705f1122b102b1"
+    },
+    {
+      "path": "src/assets/fonts/AppleSDGothicNeo-Medium.otf",
+      "sha1": "e52a869e67ec6c97a14255f441bd82ec4f3ef994"
+    },
+    {
+      "path": "src/assets/fonts/AppleSDGothicNeo-UltraLight.otf",
+      "sha1": "39c2acc59ce487f272e09344915a2a3cca2e88bd"
+    },
+    {
+      "path": "src/assets/fonts/GmarketSansBold.otf",
+      "sha1": "017d9458fd2a064694e7385b9d5a830856ef256b"
+    },
+    {
+      "path": "src/assets/fonts/GmarketSansLight.otf",
+      "sha1": "5be4ccef1e1bd975bf3fc9820f798ba0744e2917"
+    },
+    {
+      "path": "src/assets/fonts/GmarketSansMedium.otf",
+      "sha1": "bbda3c04c05e602cf59609e1e095bb6d769606f8"
+    },
+    {
+      "path": "src/assets/fonts/SFProText-Light.otf",
+      "sha1": "4352e0750018eabc1469ced09dc2e036cdb0ec6c"
+    }
+  ]
+}

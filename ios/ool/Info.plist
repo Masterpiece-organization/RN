@@ -50,7 +50,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -66,12 +66,22 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
-  	<key>NSCameraUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like to use your camera</string>
-  	<key>NSPhotoLibraryAddUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
-  	<key>NSMicrophoneUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
+	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AppleSDGothicNeo-Light.otf</string>
+		<string>AppleSDGothicNeo-Medium.otf</string>
+		<string>AppleSDGothicNeo-UltraLight.otf</string>
+		<string>SFProText-Light.otf</string>
+		<string>GmarketSansBold.otf</string>
+		<string>GmarketSansLight.otf</string>
+		<string>GmarketSansMedium.otf</string>
+	</array>
 </dict>
 </plist>
