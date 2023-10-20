@@ -10,48 +10,59 @@ import {useMainContext} from '@/contexts/MainContext';
 
 interface CheckBoxProps {
   checked: Boolean;
+  error?: string | false;
 }
 
-const CheckBox = ({checked}: CheckBoxProps) => {
+const CheckBox = ({checked, error}: CheckBoxProps) => {
   const contexts = useMainContext();
-
-  const Colors = useMemo(() => {
-    return {
-      notChecked: {
-        background: contexts?.colorScheme === 'dark' ? '#404040' : '#E5E5E5',
-      },
-
-      checked: {
-        background: contexts?.colorScheme === 'dark' ? '#E5E5E5' : '#222',
-      },
-    };
-  }, [contexts?.colorScheme]);
 
   const checkColor = checked
     ? contexts?.colorScheme === 'dark'
-      ? '#222'
-      : '#fff'
-    : '#9ca3af';
+      ? '#fff'
+      : '#8143f2'
+    : contexts?.colorScheme === 'dark'
+    ? '#121212'
+    : '#fff';
 
-  const progress = useDerivedValue(() => {
-    return withTiming(checked ? 1 : 0);
-  });
+  // const checkColors = useMemo(() => {
+  //   return {
+  //     notChecked: '#fff',
+  //     checked: contexts?.colorScheme === 'dark' ? '#121212' : '#8143f2',
+  //   };
+  // }, [contexts?.colorScheme]);
 
-  const checkBoxStyle = useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(
-      progress.value,
-      [0, 1],
-      [Colors.notChecked.background, Colors.checked.background],
-    );
-    return {
-      backgroundColor,
-    };
-  });
+  const borderColor =
+    contexts?.colorScheme === 'dark' ? 'border-white' : 'border-gray-600';
+
+  // const progress = useDerivedValue(() => {
+  //   return withTiming(checked ? 1 : 0);
+  // });
+
+  // const checkBoxStyle = useAnimatedStyle(() => {
+  //   const backgroundColor = interpolateColor(
+  //     progress.value,
+  //     [0, 1],
+  //     [Colors.notChecked.background, Colors.checked.background],
+  //   );
+  //   return {
+  //     backgroundColor,
+  //   };
+  // });
+
+  // const iconColorStyle = useAnimatedStyle(() => {
+  //   const color = interpolateColor(
+  //     progress.value,
+  //     [0, 1],
+  //     [checkColors.notChecked, checkColors.checked],
+  //   );
+  //   return {color};
+  // });
 
   return (
     <Animated.View
-      className="w-5 h-5 rounded-md items-center justify-center"
-      style={checkBoxStyle}>
+      className={`h-5 w-5 items-center justify-center rounded border ${
+        error ? 'border-dark-red' : borderColor
+      }`}>
       <CheckIcon width={16} height={16} color={checkColor} />
     </Animated.View>
   );
