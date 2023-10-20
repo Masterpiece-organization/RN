@@ -10,6 +10,14 @@
       "sha1": "e52a869e67ec6c97a14255f441bd82ec4f3ef994"
     },
     {
+      "path": "src/assets/fonts/AppleSDGothicNeo-Regular.otf",
+      "sha1": "494975928f9ef8b3e197aaa266ba6ecdde7905a9"
+    },
+    {
+      "path": "src/assets/fonts/AppleSDGothicNeo-SemiBold.ttf",
+      "sha1": "f78d7e2c662af24a855c712917b757a028d3386f"
+    },
+    {
       "path": "src/assets/fonts/AppleSDGothicNeo-UltraLight.otf",
       "sha1": "39c2acc59ce487f272e09344915a2a3cca2e88bd"
     },
