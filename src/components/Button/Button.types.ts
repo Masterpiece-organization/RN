@@ -7,7 +7,7 @@ export interface ButtonType {
   textSize?: string;
   textStyle?: object;
   onPress?: () => void;
-  type?: 'text' | 'outlined' | 'primary';
+  type?: 'text' | 'outlined' | 'primary' | 'dark';
   disabled?: boolean;
   isLoading?: boolean;
   icon?: ReactNode;
