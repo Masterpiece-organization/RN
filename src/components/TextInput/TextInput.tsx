@@ -22,11 +22,14 @@ const ControlledInput = (props: FormInputType) => {
   const containerStyle = clsx(styles.container, className);
   const inputStyle = clsx(
     editable === undefined || editable === true
-      ? contexts?.colorScheme === 'dark'
+      ? hasError
+        ? 'text-dark-red'
+        : contexts?.colorScheme === 'dark'
         ? 'text-white'
         : 'text-black'
-      : 'text-neutral-400',
+      : 'text-gray-600',
     styles.input,
+    hasError ? 'border-dark-red' : 'border-gray-600',
   );
 
   const error = formState?.errors[name]?.message as string;
@@ -45,7 +48,7 @@ const ControlledInput = (props: FormInputType) => {
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             value={field.value}
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor={hasError ? '#EA3829' : '#B0B0B0'}
             editable={editable}
             {...inputProps}
           />
@@ -55,7 +58,7 @@ const ControlledInput = (props: FormInputType) => {
       <View>
         {hasError && (
           <Text
-            textColor="text-red-700"
+            textColor="text-dark-red"
             type="bodySmall"
             className={styles.errorContainer}>
             {error}
@@ -87,7 +90,7 @@ export const TextInput = (props: FormInputType) => {
 const styles = {
   container: '',
   label: '',
-  input: 'p-4 h-12 border border-neutral-300 rounded-lg',
+  input: 'p-4 h-[52px] border rounded-lg',
   errorContainer: 'my-1',
 };
 
