@@ -26,8 +26,16 @@ const Text = ({
     textType = defaultStyle.subtitleBold;
   }
 
+  if (type === 'subtitleSmall') {
+    textType = defaultStyle.subtitleSmall;
+  }
+
   if (type === 'bodySmall') {
     textType = defaultStyle.bodySmall;
+  }
+
+  if (type === 'bodySemi') {
+    textType = defaultStyle.bodySemi;
   }
 
   if (type === 'small') {
@@ -49,10 +57,12 @@ const Text = ({
 export default Text;
 
 const defaultStyle = {
-  title: 'text-2xl font-titleBold',
-  subtitle: 'text-lg font-titleMedium',
+  title: 'text-2xl font-titleBold leading-7',
+  subtitle: 'text-base font-titleMedium leading-5',
   subtitleBold: 'text-lg font-titleBold',
-  body: 'text-base font-bodyMedium',
-  bodySmall: 'text-sm font-bodyMedium',
+  subtitleSmall: 'text-base font-body',
+  bodySemi: 'text-base font-bodySemiBold leading-[22px]',
+  body: 'text-base font-bodyRegular leading-[22px]',
+  bodySmall: 'text-sm font-bodyRegular',
   small: 'text-xs',
 };

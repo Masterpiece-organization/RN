@@ -22,12 +22,8 @@ const Button = ({
 }: ButtonType) => {
   const contexts = useMainContext();
 
-  const defaultBg = disabled
-    ? 'bg-neutral-400'
-    : contexts?.colorScheme === 'dark'
-    ? 'bg-neutral-700'
-    : 'bg-black';
-
+  let defaultBg = disabled ? 'bg-gray-400' : 'bg-primary';
+  
   let buttonType = defaultStyle.baseButton;
 
   if (type === 'text') {
@@ -36,6 +32,10 @@ const Button = ({
 
   if (type === 'outlined') {
     buttonType = defaultStyle.outlinedButton;
+  }
+  
+  if (type === 'dark') {
+    defaultBg = 'bg-gray-800';
   }
 
   const buttonStyle = clsx(buttonType, buttonColor ?? defaultBg, className);
@@ -65,6 +65,7 @@ export default Button;
 
 const defaultStyle = {
   baseButton: 'w-100 h-[52px] justify-center items-center rounded-lg flex-row',
+
   textButton: '',
   outlinedButton:
     'w-100 h-[52px] justify-center items-center rounded-lg flex-row border',

@@ -3,11 +3,13 @@ import Text from '../Text';
 import {TitleSectionPropsType} from './TitleSEction.type';
 const TitleSection = ({title, body}: TitleSectionPropsType) => {
   return (
-    <View className="justify-center pt-8">
-      <Text className="mb-2" type="title">
+    <View>
+      <Text className="mb-base" type="title">
         {title}
       </Text>
-      <Text>{body}</Text>
+      <Text className="mb-md" type="subtitle">
+        {body}
+      </Text>
     </View>
   );
 };
