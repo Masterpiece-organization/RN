@@ -91,13 +91,17 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
   return (
     <Container className={defaultMargin}>
       <TitleSection
-        title="이메일 인증하기"
+        title={timerOn ? '인증번호를 입력하세요.' : '안녕하세요!'}
         // eslint-disable-next-line quotes
-        body={`우리들만의 리그에 오신 것을 환영합니다!\n가입을 위해 이메일 인증을 진행해주세요.`}
+        body={
+          timerOn
+            ? '등록하신 이메일 주소로 인증번호를 발송하였습니다.'
+            : `우리들만의 리그에 오신 것을 환영합니다!\n가입을 위해 이메일 인증을 진행해주세요.`
+        }
       />
 
-      <View className="flex-1 pt-9">
-        <View className="form -mt-2 space-y-2">
+      <View className="flex-1">
+        <View className="form">
           {formError ? (
             <View>
               <Text textColor="text-red">
@@ -117,11 +121,11 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
                       required: '이메일을 입력해주세요.',
                       pattern: {
                         value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
-                        message: '이메일 형식이 아닙니다.',
+                        message: '잘못된 유형의 이메일 주소입니다.',
                       },
                     }}
                     setFormError={setError}
-                    className="mb-2 w-3/4"
+                    className="w-3/4"
                     editable={timerOn ? false : true}
                   />
                   <Button
@@ -139,9 +143,10 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
                     onPress={methods.handleSubmit(checkEmail)}
                     textColor="text-white"
                     textSize="text-xs"
-                    className="ml-2 h-12 flex-auto"
+                    className="ml-2 h-[52px] flex-auto"
                     isLoading={!timerOn && !!contexts?.isMutating}
                     disabled={timerOn}
+                    type="dark"
                   />
                 </View>
 
@@ -154,28 +159,23 @@ const CheckEmail = ({navigation}: CheckEmailScreenProps) => {
                       required: '인증번호를 입력해 주세요.',
                     }}
                     setFormError={setError}
-                    className="mb-2"
+                    className="mt-xs"
                   />
                 )}
               </FormProvider>
             </>
           )}
 
-          <View className="pt-3">
-            {timerOn && (
-              <Button
-                label="확인"
-                onPress={
-                  // () =>
-                  //   navigation.navigate('Register', {
-                  //     email: methods.getValues().email,
-                  //   })
-                  methods.handleSubmit(onSubmit)
-                }
-                textColor="text-white"
-                isLoading={timerOn && !!contexts?.isMutating}
-              />
-            )}
+          <View className="mt-lg">
+            {/* {timerOn && ( */}
+            <Button
+              label="확인"
+              onPress={methods.handleSubmit(onSubmit)}
+              textColor="text-white"
+              isLoading={timerOn && !!contexts?.isMutating}
+              disabled={!timerOn}
+            />
+            {/* )} */}
           </View>
         </View>
       </View>
