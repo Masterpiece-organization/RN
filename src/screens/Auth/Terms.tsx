@@ -1,22 +1,29 @@
-import {useState} from 'react';
-import {Button, Text} from '@components/index';
-import {SafeAreaView, View, TouchableWithoutFeedback} from 'react-native';
+import {useState, useCallback} from 'react';
+import {Button, Text, TitleSection} from '@components/index';
+import {View, TouchableWithoutFeedback} from 'react-native';
 import {CheckBox, Container} from '@/components';
 import {useMainContext} from '@/contexts/MainContext';
 import {RootStackParamList} from '@/typings/RootStackParamList';
 import {StackScreenProps} from '@react-navigation/stack';
-import showAlert from '@/utils/showAlert';
+import {colorBasedOnTheme, defaultMargin} from '@/theme';
+import ArrowRightIcon from '@/assets/icons/arrow_right.svg';
+import {useFocusEffect} from '@react-navigation/native';
 
 const TERMS_DATA = [
   {
     label: '이용약관(필수)',
     objName: 'ToU',
-    className: 'p-4',
+    className: 'py-sm px-5',
   },
   {
-    label: '개인정보 수집 이용•동의(필수)',
+    label: '개인정보 수집 이용 동의(필수)',
     objName: 'personalInfor',
-    className: 'pb-4 px-4',
+    className: 'pb-sm px-5',
+  },
+  {
+    label: '마케팅 이메일 수신 동의(선택)',
+    objName: 'marketing',
+    className: 'pb-sm px-5',
   },
 ];
 
@@ -24,14 +31,48 @@ interface IisChecked {
   [key: string]: boolean;
   ToU: boolean;
   personalInfor: boolean;
+  marketing: boolean;
 }
+
+type ErrorState = {
+  [key: string]: boolean;
+  ToU: boolean;
+  personalInfor: boolean;
+};
 
 export type TermsScreenProps = StackScreenProps<RootStackParamList, 'Terms'>;
 
 const Terms = ({navigation}: TermsScreenProps) => {
   const contexts = useMainContext();
+  const colorScheme = contexts?.colorScheme;
+
+  const colorThemes = useCallback(() => {
+    const borderStyle = colorBasedOnTheme(
+      colorScheme,
+      'border-gray-600',
+      'border-gray-600',
+    );
+
+    const textStyle = colorBasedOnTheme(
+      colorScheme,
+      'text-white',
+      'text-gray-800',
+    );
+
+    const iconStyle = colorBasedOnTheme(colorScheme, '#fff', '#404040');
+
+    return {borderStyle, textStyle, iconStyle};
+  }, [colorScheme]);
+
+  const {borderStyle, textStyle, iconStyle} = colorThemes();
 
   const [isChecked, setIsChecked] = useState<IisChecked>({
+    ToU: false,
+    personalInfor: false,
+    marketing: false,
+  });
+
+  const [error, setError] = useState<ErrorState>({
     ToU: false,
     personalInfor: false,
   });
@@ -59,67 +100,84 @@ const Terms = ({navigation}: TermsScreenProps) => {
       return navigation.navigate('CheckEmail');
     }
 
-    showAlert({
-      title: '이용 약관 및 개인정보 처리방침',
-      message:
-        '회원가입을 위해서는 이용약관 및 개인정보 처리방침에 동의가 필요합니다.',
-      onPress: () => null,
+    setError({
+      ToU: !ToU,
+      personalInfor: !personalInfor,
     });
   };
 
-  return (
-    <Container>
-      <SafeAreaView className="flex">
-        <View className="justify-center pt-8 ">
-          <Text className="mb-3" type="title">
-            이용약관에 동의해주세요.
-          </Text>
-          <Text
-            textColor={
-              contexts?.colorScheme === 'dark'
-                ? 'text-white'
-                : 'text-neutral-600'
-            }>
-            우리들만의 리그를 이용하기 전 이용약관 동의가 필요합니다.
-          </Text>
-        </View>
-      </SafeAreaView>
-      <View
-        className={`my-8 ${
-          contexts?.colorScheme === 'dark'
-            ? 'border-neutral-700 border rounded-lg'
-            : 'border-neutral-300 border rounded-lg'
-        }`}>
-        <View
-          className={`p-4 border-b ${
-            contexts?.colorScheme === 'dark'
-              ? 'border-neutral-700'
-              : 'border-neutral-300'
-          }`}>
-          <TouchableWithoutFeedback onPress={() => handlePress('all')}>
-            <View className="flex-row items-center">
-              <CheckBox checked={isChecked.ToU && isChecked.personalInfor} />
-              <Text className="font-bold ml-2">모두 동의</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
+  useFocusEffect(
+    useCallback(() => {
+      setError({
+        ToU: false,
+        personalInfor: false,
+      });
 
-        {TERMS_DATA.map(({label, objName, className}) => (
-          <View className={className} key={label}>
-            <TouchableWithoutFeedback
-              className="flex-row items-center"
-              onPress={() => handlePress(objName)}>
+      setIsChecked({
+        ToU: false,
+        personalInfor: false,
+        marketing: false,
+      });
+
+      return () => {};
+    }, []),
+  );
+
+  return (
+    <Container className={`${defaultMargin} justify-between`}>
+      <View>
+        <TitleSection
+          title="이용약관에 동의해주세요."
+          body={`우리들만의 리그를 이용하기 전 서비스\n이용 동의 및 확인이 필요합니다.`}
+        />
+
+        <View className={`rounded-lg border ${borderStyle}`}>
+          <View className={`mx-5 border-b py-sm ${borderStyle}`}>
+            <TouchableWithoutFeedback onPress={() => handlePress('all')}>
               <View className="flex-row items-center">
-                <CheckBox checked={isChecked[objName]} />
-                <Text className="ml-2" type="bodySmall">
-                  {label}
+                <CheckBox checked={isChecked.ToU && isChecked.personalInfor} />
+                <Text className="ml-xs" textColor={textStyle}>
+                  모두 동의
                 </Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
-        ))}
+
+          {TERMS_DATA.map(({label, objName, className}, index) => (
+            <View className={className} key={label}>
+              <TouchableWithoutFeedback
+                className="flex-row items-center"
+                onPress={() => handlePress(objName)}>
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center">
+                    <CheckBox
+                      checked={isChecked[objName]}
+                      error={error[objName]}
+                    />
+                    <Text
+                      className="ml-xs"
+                      textColor={
+                        index !== 2 && error[objName]
+                          ? 'text-dark-red'
+                          : textStyle
+                      }>
+                      {label}
+                    </Text>
+                  </View>
+
+                  <ArrowRightIcon color={iconStyle} />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          ))}
+        </View>
+        <Text type="bodySmall" textColor="text-dark-red" className="mt-xs">
+          {(error.ToU || error.personalInfor) &&
+            '필수 이용약관에 동의해주세요.'}
+        </Text>
       </View>
-      <View className="pb-8">
+
+      <View className="pb-lg">
         <Button label="다음" onPress={handleSubmit} textColor="text-white" />
       </View>
     </Container>

@@ -1,20 +1,27 @@
-import {View, SafeAreaView} from 'react-native';
-import {useState} from 'react';
-import {Text, Button, TextInput, Container} from '@components/index';
+import {View} from 'react-native';
+import {useState, useEffect} from 'react';
+import {
+  Text,
+  Button,
+  TextInput,
+  Container,
+  TitleSection,
+} from '@components/index';
 import {RootStackParamList} from '@/typings/RootStackParamList';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useMainContext} from '@/contexts/MainContext';
 import {
   useForm,
   FormProvider,
   SubmitHandler,
   FieldValues,
 } from 'react-hook-form';
+import useUser from '@/hooks/useUser';
+import {defaultMargin} from '@/theme';
 
 type ResetPwScreenProps = StackScreenProps<RootStackParamList, 'ResetPw'>;
 
-const ResetPw = ({navigation}: ResetPwScreenProps) => {
-  const contexts = useMainContext();
+const ResetPw = ({navigation, route}: ResetPwScreenProps) => {
+  const {resetPasswordQuery} = useUser();
 
   // useForm hook and set default behavior/values
   const {...methods} = useForm({mode: 'onSubmit'});
@@ -22,28 +29,45 @@ const ResetPw = ({navigation}: ResetPwScreenProps) => {
   const watchingPassword = methods.watch('password');
 
   const [formError, setError] = useState<Boolean>(false);
+  const [param, setParam] = useState<string>('');
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.authentication);
-    // You can use the data to perform actions like logging in, etc.
-    navigation.navigate('Success', {
-      name: 'resetPassword',
-    });
+    const {password} = data;
+    const email = param;
+
+    resetPasswordQuery.mutate(
+      {email, password},
+      {
+        onSuccess: () => {
+          navigation.navigate('Success', {
+            name: 'resetPassword',
+          });
+        },
+        onError: () => {
+          methods.setError('confirmPassword', {
+            type: 'manual',
+            message: '에러',
+          });
+        },
+      },
+    );
   };
 
-  return (
-    <Container>
-      <SafeAreaView className="flex">
-        <View className="justify-center pt-8 ">
-          <Text className="mb-2" type="subtitle">
-            새로운 비밀번호를 설정해주세요.
-          </Text>
-        </View>
-      </SafeAreaView>
+  useEffect(() => {
+    if (route.params?.email) {
+      setParam(route.params?.email);
+    }
+  }, [route.params?.email]);
 
-      <View className="pt-9">
-        <View className="form space-y-2 -mt-2">
+  return (
+    <Container className={defaultMargin}>
+      <TitleSection
+        title="비밀번호를 설정하세요."
+        body="새로운 비밀번호를 설정해주세요."
+      />
+
+      <View>
+        <View className="form space-y-2">
           {formError ? (
             <View>
               <Text textColor="text-red">
@@ -83,8 +107,8 @@ const ResetPw = ({navigation}: ResetPwScreenProps) => {
               </FormProvider>
             </>
           )}
-          <Text type="small" textColor="text-neutral-400" className="mt-2">
-            비밀번호는 대소문자, 숫자, 특수문자를 혼합하여 6~20자로
+          <Text type="bodySmall" textColor="text-neutral-400" className="mt-2">
+            비밀번호는 영어 대소문자, 숫자, 특수만자를 혼합하여 6~20자로
             입력해주세요.
           </Text>
           <View className="pt-3">
@@ -92,9 +116,6 @@ const ResetPw = ({navigation}: ResetPwScreenProps) => {
               label="변경하기"
               onPress={methods.handleSubmit(onSubmit)}
               textColor="text-white"
-              buttonColor={
-                contexts?.colorScheme === 'dark' ? 'bg-neutral-700' : 'bg-black'
-              }
             />
           </View>
         </View>

@@ -1,6 +1,12 @@
-import {View, SafeAreaView} from 'react-native';
+import {View} from 'react-native';
 import {useState, useCallback} from 'react';
-import {Text, Button, TextInput, Container} from '@components/index';
+import {
+  Text,
+  Button,
+  TextInput,
+  Container,
+  TitleSection,
+} from '@components/index';
 import {RootStackParamList} from '@/typings/RootStackParamList';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useMainContext} from '@/contexts/MainContext';
@@ -13,6 +19,7 @@ import {
 import useTimer from '@/hooks/useTimer';
 import {useFocusEffect} from '@react-navigation/native';
 import useUser from '@/hooks/useUser';
+import {defaultMargin} from '@/theme';
 
 type FindPwScreenProps = StackScreenProps<RootStackParamList, 'FindPw'>;
 
@@ -94,18 +101,13 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
   );
 
   return (
-    <Container>
-      <SafeAreaView className="flex">
-        <View className="justify-center pt-8 ">
-          <Text className="mb-2" type="subtitle">
-            비밀번호를 잊으셨나요?
-          </Text>
-          <Text>등록하신 이메일 주소로 비밀번호를 재설정하실 수 있습니다.</Text>
-        </View>
-      </SafeAreaView>
-
-      <View className="pt-9">
-        <View className="form space-y-2 -mt-2">
+    <Container className={defaultMargin}>
+      <TitleSection
+        title="비밀번호를 잊으셨나요?"
+        body="등록하신 이메일 주소로 인증번호를 요청하여 비밀번호를 재설정 하실 수 있습니다."
+      />
+      <View>
+        <View className="form space-y-2">
           {formError ? (
             <View>
               <Text textColor="text-red">
@@ -115,7 +117,7 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
           ) : (
             <>
               <FormProvider {...methods}>
-                <View className="flex-row items-starti">
+                <View className="items-starti flex-row">
                   <TextInput
                     name="email"
                     placeholder="이메일 주소"
@@ -125,7 +127,7 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
                       required: '이메일을 입력해주세요.',
                       pattern: {
                         value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
-                        message: '이메일 형식이 아닙니다.',
+                        message: '잘못된 유형의 이메일 주소입니다.',
                       },
                     }}
                     setFormError={setError}
@@ -141,9 +143,10 @@ const FindPw = ({navigation}: FindPwScreenProps) => {
                     onPress={methods.handleSubmit(checkEmail)}
                     textColor="text-white"
                     textSize="text-xs"
-                    className="flex-auto ml-2 h-12"
+                    className="ml-2 h-[52px] flex-auto"
                     isLoading={!timerOn && !!contexts?.isMutating}
                     disabled={timerOn}
+                    type="dark"
                   />
                 </View>
 
