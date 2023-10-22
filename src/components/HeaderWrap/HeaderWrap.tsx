@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from '../Header/Header';
-import Text from '../Text';
 import {SafeAreaView, Dimensions} from 'react-native';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import Setting from '@/assets/icons/setting.svg';
@@ -12,82 +11,107 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
   const contexts = useMainContext();
 
   const {
-    route: {name},
+    route: {name, params: routeParams},
     navigation,
   } = props;
 
+  const castedRouteParams = routeParams as Record<string, unknown> | undefined;
+
   const getHeaderData = ({
     colorScheme,
-  }: GetHeaderDataType): Record<string, HeaderDataType> => ({
-    Login: {
-      left: true,
-      border: false,
-    },
-    Terms: {
-      left: true,
-      border: true,
-      center: '서비스 이용 동의 및 확인',
-      animatingWidthValues: [0, Dimensions.get('window').width * 0.333],
-      right: <Text type="bodySmall">1 of 3</Text>,
-    },
-    CheckEmail: {
-      left: true,
-      border: true,
-      center: '이메일 확인',
-      animatingWidthValues: [0, Dimensions.get('window').width * 0.666],
-      right: <Text type="bodySmall">2 of 3</Text>,
-    },
-    Register: {
-      left: true,
-      border: true,
-      center: '회원가입',
-      animatingWidthValues: [0, Dimensions.get('window').width * 1],
-      right: <Text type="bodySmall">3 of 3</Text>,
-    },
-    FindPw: {
-      left: true,
-      border: true,
-      center: '비밀번호 재설정',
-      animatingWidthValues: [0, Dimensions.get('window').width * 0.5],
-      right: <Text type="bodySmall">1 of 2</Text>,
-    },
-    ResetPw: {
-      left: true,
-      border: true,
-      center: '비밀번호 재설정',
-      animatingWidthValues: [0, Dimensions.get('window').width * 1],
-      right: <Text type="bodySmall">2 of 2</Text>,
-    },
-    RegisterSuccess: {
-      left: true,
-    },
-    My: {
-      left: false,
-      border: false,
-      center: 'My',
-      right: (
-        <Button
-          label=""
-          onPress={() => navigation.navigate('Setting')}
-          buttonColor=""
-          className="h-6"
-          icon={<Setting color={colorScheme === 'dark' ? 'white' : 'black'} />}
-        />
-      ),
-    },
-    Setting: {
-      left: true,
-      border: false,
-      center: '설정',
-    },
-    EditProfile: {
-      left: true,
-      border: false,
-      center: '프로필 수정',
-    },
-  });
+    params,
+  }: GetHeaderDataType): Record<string, HeaderDataType> => {
+    const resetPasswordCondition =
+      typeof params === 'object' &&
+      params !== null &&
+      params['someKey'] === 'resetPassword';
 
-  const headerData = getHeaderData({colorScheme: contexts?.colorScheme})[name];
+    return {
+      Login: {
+        left: true,
+        border: false,
+      },
+      Terms: {
+        left: true,
+        border: true,
+        center: '회원가입',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.1666],
+      },
+      CheckEmail: {
+        left: true,
+        border: true,
+        center: '회원가입',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.3333],
+      },
+      Register: {
+        left: true,
+        border: true,
+        center: '회원가입',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.5],
+      },
+      Nickname: {
+        left: true,
+        border: true,
+        center: '회원가입',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.6666],
+      },
+      Position: {
+        left: true,
+        border: true,
+        center: '회원가입',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.8333],
+      },
+      Success: {
+        left: false,
+        center: resetPasswordCondition ? '비밀번호 찾기' : '회원가입',
+        border: true,
+        animatingWidthValues: [0, Dimensions.get('window').width * 1],
+      },
+      FindPw: {
+        left: true,
+        border: true,
+        center: '비밀번호 찾기',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.3],
+      },
+      ResetPw: {
+        left: true,
+        border: true,
+        center: '비밀번호 찾기',
+        animatingWidthValues: [0, Dimensions.get('window').width * 0.6],
+      },
+      My: {
+        left: false,
+        border: false,
+        center: '마이페이지',
+        right: (
+          <Button
+            label=""
+            onPress={() => navigation.navigate('Setting')}
+            buttonColor=""
+            className="h-6"
+            icon={
+              <Setting color={colorScheme === 'dark' ? 'white' : 'black'} />
+            }
+          />
+        ),
+      },
+      Setting: {
+        left: true,
+        border: false,
+        center: '설정',
+      },
+      EditProfile: {
+        left: true,
+        border: false,
+        center: '프로필 수정',
+      },
+    };
+  };
+
+  const headerData = getHeaderData({
+    colorScheme: contexts?.colorScheme,
+    params: castedRouteParams,
+  })[name];
 
   return (
     <SafeAreaView className="bg-white dark:bg-black">
