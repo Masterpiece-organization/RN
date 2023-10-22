@@ -5,6 +5,14 @@ export interface ButtonType {
   buttonColor?: string;
   textColor?: string;
   textSize?: string;
+  textType?:
+    | 'title'
+    | 'subtitle'
+    | 'subtitleBold'
+    | 'subtitleSmall'
+    | 'bodySemi'
+    | 'bodySmall'
+    | 'small';
   textStyle?: object;
   onPress?: () => void;
   type?: 'text' | 'outlined' | 'primary' | 'dark';
