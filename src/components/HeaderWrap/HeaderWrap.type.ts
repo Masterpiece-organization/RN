@@ -7,4 +7,5 @@ export interface HeaderDataType {
 }
 export interface GetHeaderDataType {
   colorScheme: string | null | undefined;
+  params: Record<string, unknown> | undefined;
 }
