@@ -3,7 +3,6 @@ import {View, TouchableOpacity} from 'react-native';
 import {ButtonType} from './Button.types';
 import Loader from '../Loader';
 import {clsx} from 'clsx';
-import {useMainContext} from '@/contexts/MainContext';
 import Text from '../Text';
 import {rowCenter} from '@/theme';
 
@@ -12,6 +11,7 @@ const Button = ({
   buttonColor,
   textColor,
   textSize,
+  textType,
   onPress,
   type = 'primary',
   disabled = false,
@@ -20,10 +20,8 @@ const Button = ({
   className,
   buttonWrap,
 }: ButtonType) => {
-  const contexts = useMainContext();
-
   let defaultBg = disabled ? 'bg-gray-400' : 'bg-primary';
-  
+
   let buttonType = defaultStyle.baseButton;
 
   if (type === 'text') {
@@ -33,14 +31,19 @@ const Button = ({
   if (type === 'outlined') {
     buttonType = defaultStyle.outlinedButton;
   }
-  
+
   if (type === 'dark') {
     defaultBg = 'bg-gray-800';
   }
 
   const buttonStyle = clsx(buttonType, buttonColor ?? defaultBg, className);
 
-  const textStyle = clsx(textColor ?? defaultStyle.textColor, textSize);
+  const textStyle = clsx(
+    disabled
+      ? defaultStyle.disabledTextColor
+      : textColor ?? defaultStyle.textColor,
+    textSize,
+  );
 
   const buttonWrapStyle = clsx(rowCenter, buttonWrap);
 
@@ -53,7 +56,9 @@ const Button = ({
         <Loader color={textStyle} />
       ) : (
         <View className={buttonWrapStyle}>
-          <Text className={textStyle}>{label}</Text>
+          <Text className={textStyle} type={textType}>
+            {label}
+          </Text>
           {icon}
         </View>
       )}
@@ -65,9 +70,9 @@ export default Button;
 
 const defaultStyle = {
   baseButton: 'w-100 h-[52px] justify-center items-center rounded-lg flex-row',
-
   textButton: '',
   outlinedButton:
     'w-100 h-[52px] justify-center items-center rounded-lg flex-row border',
   textColor: 'text-white',
+  disabledTextColor: 'text-gray-600',
 };
