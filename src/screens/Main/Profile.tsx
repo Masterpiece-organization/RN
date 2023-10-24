@@ -6,21 +6,9 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import {useState} from 'react';
-import {
-  Text,
-  Container,
-  Button,
-  Avatar,
-  ImagePickerModal,
-  Card,
-} from '@/components';
+import {Text, Container, Button, Avatar, Card} from '@/components';
 import {useMainContext} from '@/contexts/MainContext';
-import {Field as MatchesIcon} from '@/assets/icons/iconComponents';
-import BallIcon from '@/assets/icons/ball.svg';
 import ArrowRightIcon from '@/assets/icons/arrow_right.svg';
-import useCamera from '@/hooks/useCamera';
-import {ImagePickerResponse} from 'react-native-image-picker';
 import {colorBasedOnTheme} from '@/theme';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '@/typings/RootStackParamList';
@@ -61,13 +49,62 @@ const DATA = [
   },
 ];
 
+const MOCK_MATCH_HISTORY = [
+  {
+    title: '맨체스터 시티',
+    matches: 12,
+    goals: 32,
+  },
+  {title: '맨체스터 유나이티드', matches: 24, goals: 12},
+];
+
 const ScreenWidth = Dimensions.get('window').width; // 현재 화면의 너비 가져오기
 const OneQuarterWidth = ScreenWidth / 6; // 현재 화면 너비의 1/4
 
 type ProfileScreenProps = StackScreenProps<RootStackParamList, 'Profile'>;
 
+interface MatchHistoryProps {
+  title: string;
+  matches: number;
+  goals: number;
+  index: number;
+}
+
+const MatchHistory = ({title, matches, goals, index}: MatchHistoryProps) => {
+  const isLastItem = index === MOCK_MATCH_HISTORY.length - 1;
+
+  return (
+    <View
+      className={`${
+        isLastItem ? '' : 'mb-sm'
+      } flex-row items-center justify-between`}>
+      <View className="basis-2/3 flex-row items-center">
+        <View className="mr-4 h-11 w-11 rounded-full border border-neutral-600">
+          <Image
+            source={require('@/assets/images/logo.png')}
+            className="h-full w-full"
+            resizeMode="cover"
+          />
+        </View>
+        <Text>{title}</Text>
+      </View>
+      <View className="basis-1/3 flex-row justify-end">
+        <Text className="mr-5 basis-10 text-center" textColor="text-gray-800">
+          {matches}
+        </Text>
+        <Text className="basis-7 text-center " textColor="text-gray-800">
+          {goals}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const Profile = ({navigation}: ProfileScreenProps) => {
   const contexts = useMainContext();
+
+  console.log(contexts);
+
   const colorScheme = contexts?.colorScheme;
   const fillColor = colorBasedOnTheme(colorScheme, 'white', '#121212');
 
@@ -79,7 +116,7 @@ const Profile = ({navigation}: ProfileScreenProps) => {
     return (
       <View
         className={`rounded-full border border-neutral-600 ${
-          index === DATA.length - 1 ? 'mr-8' : 'mr-4'
+          index === DATA.length - 1 ? 'mr-10' : 'mr-xs'
         }`}
         style={{width: OneQuarterWidth, height: OneQuarterWidth}}>
         <Image
@@ -91,188 +128,119 @@ const Profile = ({navigation}: ProfileScreenProps) => {
     );
   };
 
-  const [pickerResponse, setPickerResponse] =
-    useState<ImagePickerResponse | null>(null);
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const handleImagePickerModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const {onImageGalleryClick, onCameraPress} = useCamera({
-    setPickerResponse,
-    setIsModalVisible,
-  });
-
-  // async function SendImageToAPI(base64, type) {
-  //   if (
-  //     type === 'image/jpeg' ||
-  //     type === 'image/png' ||
-  //     type === 'image/jpg' ||
-  //     type === 'image/webp' ||
-  //     type === 'image/gif'
-  //   ) {
-  //     /**
-  //      * TODO: send an image to db
-  //      */
-  //   } else {
-  //     /**
-  //      * TODO: handle error
-  //      */
-  //   }
-  // }
-
-  // async function getUserImage() {
-  //   try {
-  //     /**
-  //      * TODO: get an image from db
-  //      * call setImageFromDB after getting an image form db
-  //      */
-  //     // setImageFromDB(response.data.imageAsBase64);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  // const createThreeButtonAlert = () =>
-  //   Alert.alert('프로필 이미지 설정', '', [
-  //     {
-  //       text: '사진 찍기',
-  //       onPress: () => onImageGalleryClick,
-  //     },
-  //     {
-  //       text: '앨범에서 선택하기',
-  //       onPress: () => onCameraPress,
-  //     },
-  //   ]);
-
   return (
-    <Container horizontal className={`${defaultMargin}`}>
-      <ImagePickerModal
-        isVisible={isModalVisible}
-        setIsVisible={setIsModalVisible}
-        onImageLibraryPress={onImageGalleryClick}
-        onCameraPress={onCameraPress}
-      />
-      <SafeAreaView className="flex">
+    <Container horizontal className={`${defaultMargin} mt-md`}>
+      <SafeAreaView>
         <Pressable onPress={() => navigation.navigate('EditProfile')}>
-          <Card className="flex-row items-center justify-between rounded-lg px-5">
+          <Card className="mb-xs mt-0 flex-row items-center justify-between rounded-lg border border-gray-600 px-5 py-md">
             <View className="flex-row items-center">
               <Avatar
                 className="mr-6 h-16 w-16"
-                pickerResponse={pickerResponse}
-                handleOnPress={handleImagePickerModal}
+                iconClassName="h-7 w-7"
+                disabled={true}
               />
               <View>
-                <Text type="subtitle" className="mb-2">
-                  지네딘 지단
-                </Text>
+                <Text className="mb-2">지네딘 지단</Text>
                 <View className="flex-row gap-2">
                   <View>
-                    <Text type="bodySmall" textColor="text-neutral-400">
+                    <Text type="bodySmall" textColor="text-gray-800">
                       ST / CAM / CM
                     </Text>
                   </View>
                 </View>
               </View>
             </View>
-            <ArrowRightIcon color="#A3A3A3" width={24} />
+            <ArrowRightIcon color="#b0b0b0" width={18} />
           </Card>
         </Pressable>
       </SafeAreaView>
       <View>
         <Card
-          className="rounded-lg"
+          className="mb-xs rounded-lg border border-gray-600"
           title="경기이력"
           titleButton={
-            <View className="flex-row">
-              <View className="mr-3">
-                <MatchesIcon width={20} height={20} strokeColor={fillColor} />
-              </View>
-              <View>
-                <BallIcon width={20} height={20} color={fillColor} />
-              </View>
-            </View>
-          }>
-          <View className="px-5 pt-3">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center">
-                <View className="mr-4 h-8 w-8 rounded-full border border-neutral-600">
-                  <Image
-                    source={require('@/assets/images/logo.png')}
-                    className="h-full w-full"
-                    resizeMode="cover"
-                  />
-                </View>
-                <Text>맨체스터 시티</Text>
-              </View>
-              <View className="mr-1 flex-row">
-                <Text
-                  className="w-8 text-right"
-                  type="bodySmall"
-                  textColor="text-neutral-400">
-                  32
-                </Text>
-                <Text
-                  className="w-8 text-right"
-                  type="bodySmall"
-                  textColor="text-neutral-400">
-                  12
-                </Text>
-              </View>
-            </View>
-            <View className="flex-row items-center justify-between pt-3">
-              <View className="flex-row items-center">
-                <View className="mr-4 h-8 w-8 rounded-full border border-neutral-600 ">
-                  <Image
-                    source={require('@/assets/images/logo.png')}
-                    className="h-full w-full"
-                    resizeMode="cover"
-                  />
-                </View>
-                <Text>맨체스터 시티</Text>
-              </View>
-              <View className="mr-1 flex-row">
-                <Text
-                  className="w-8 text-right"
-                  type="bodySmall"
-                  textColor="text-neutral-400">
-                  17
-                </Text>
-                <Text
-                  className="w-8 text-right"
-                  type="bodySmall"
-                  textColor="text-neutral-400">
-                  6
-                </Text>
-              </View>
-            </View>
-          </View>
-        </Card>
-
-        <Card
-          className="rounded-lg"
-          title="나의 소속팀"
-          titleButton={
             <Button
-              className=""
-              textSize="text-sm"
-              label="팀 찾기"
+              className="mr-1"
+              label="더보기"
               onPress={console.log}
               type="text"
+              textType="bodySmall"
               buttonColor=""
-              textColor="text-neutral-400"
+              textColor="text-gray-600"
               icon={
                 <View className="-mr-2">
-                  <ArrowRightIcon color="#A3A3A3" width={20} />
+                  <ArrowRightIcon
+                    color="#b0b0b0"
+                    width={18}
+                    style={{marginBottom: 2}}
+                  />
                 </View>
               }
             />
           }>
-          <View className="pt-3">
+          <View className="px-5 py-sm">
+            <View className="mb-sm flex-row justify-between">
+              <Text
+                type="bodySmall"
+                textColor="text-gray-800"
+                className="basis-2/3 ">
+                클럽 이름
+              </Text>
+              <View className="basis-1/3 flex-row justify-end">
+                <Text
+                  className="mr-5 basis-10 text-center"
+                  type="bodySmall"
+                  textColor="text-gray-800">
+                  경기수
+                </Text>
+                <Text
+                  type="bodySmall"
+                  textColor="text-gray-800"
+                  className="basis-7 text-center">
+                  골수
+                </Text>
+              </View>
+            </View>
+            <>
+              {MOCK_MATCH_HISTORY.map(({title, matches, goals}, index) => (
+                <MatchHistory
+                  key={index}
+                  title={title}
+                  matches={matches}
+                  goals={goals}
+                  index={index}
+                />
+              ))}
+            </>
+          </View>
+        </Card>
+
+        <Card
+          className="rounded-lg border border-gray-600"
+          title="나의 소속팀"
+          titleButton={
+            <Button
+              className="mr-1"
+              label="팀 찾기"
+              onPress={console.log}
+              type="text"
+              textType="bodySmall"
+              buttonColor=""
+              textColor="text-gray-600"
+              icon={
+                <View className="-mr-2">
+                  <ArrowRightIcon
+                    color="#b0b0b0"
+                    width={18}
+                    style={{marginBottom: 2}}
+                  />
+                </View>
+              }
+            />
+          }>
+          <View className="py-sm">
             <FlatList
-              className="px-4"
+              className="px-5"
               data={DATA}
               horizontal
               showsHorizontalScrollIndicator={false}
