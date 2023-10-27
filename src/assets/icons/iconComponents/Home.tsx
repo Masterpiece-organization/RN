@@ -5,24 +5,37 @@ const Home = ({
   fillColor = 'none',
   strokeColor = 'currentColor',
   focused,
-  className,
-  width = 28,
-  height = 28,
+  classNames,
+  width = 24,
+  height = 24,
 }: SvgIconProps) => {
   return (
     <Svg
-      width={focused ? width + 2 : width}
-      height={focused ? height + 2 : height}
+      width={width}
+      height={height}
       strokeWidth="1.5"
       viewBox="0 0 24 24"
-      fill={fillColor}
-      className={className}>
+      className={classNames}>
       <Path
-        d="M9 21H7a4 4 0 01-4-4v-6.292a4 4 0 011.927-3.421l5-3.03a4 4 0 014.146 0l5 3.03A4 4 0 0121 10.707V17a4 4 0 01-4 4h-2m-6 0v-4a3 3 0 013-3v0a3 3 0 013 3v4m-6 0h6"
+        d="M9.02 2.83999L3.63 7.03999C2.73 7.73999 2 9.22999 2 10.36V17.77C2 20.09 3.89 21.99 6.21 21.99H17.79C20.11 21.99 22 20.09 22 17.78V10.5C22 9.28999 21.19 7.73999 20.2 7.04999L14.02 2.71999C12.62 1.73999 10.37 1.78999 9.02 2.83999Z"
         stroke={strokeColor}
-        // strokeWidth={focused ? ".5" : "1.5"}
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill={fillColor}
+      />
+      <Path
+        d="M12 17.99V14.99"
+        stroke={
+          focused
+            ? strokeColor === 'white'
+              ? '#121212'
+              : 'white'
+            : strokeColor
+        }
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );
