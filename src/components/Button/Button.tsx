@@ -73,6 +73,6 @@ const defaultStyle = {
   textButton: '',
   outlinedButton:
     'w-100 h-[52px] justify-center items-center rounded-lg flex-row border',
-  textColor: 'text-white',
+  textColor: 'text-white font-bodySemiBold',
   disabledTextColor: 'text-gray-600',
 };
