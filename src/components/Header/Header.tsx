@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useMainContext} from '@/contexts/MainContext';
 import {Text, Button} from '@components/index';
+import useTheme from '@/hooks/useTheme';
 
 const initialOffset = 0;
 
@@ -23,9 +24,12 @@ const Header = ({
   border = false,
   ...props
 }: HeaderType & NativeStackHeaderProps) => {
-  const contexts = useMainContext();
+  const {colorScheme} = useMainContext();
   //   const [left, center, right] = children;
-  const {navigation} = props;
+  const {
+    navigation,
+    route: {name},
+  } = props;
 
   const offset = useSharedValue(initialOffset);
 
@@ -56,32 +60,38 @@ const Header = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const {textColorThemes} = useTheme();
+  const {dark} = textColorThemes();
+
   return (
     <View className="pt-1">
-      <View className="flex flex-row items-center px-5 pb-3">
+      <View className="flex flex-row items-center px-lg pb-3">
         <View className="flex-1 items-start">
           {left && (
             <Button
               label=""
               icon={
                 <ArrowLeftIcon
-                  color={contexts?.colorScheme === 'dark' ? 'white' : 'black'}
-                  width={28}
-                  height={28}
+                  color={colorScheme === 'dark' ? 'white' : '#404040'}
+                  width={24}
+                  height={24}
                 />
               }
-              onPress={() => navigation.goBack()}
+              onPress={() => {
+                name === 'Terms'
+                  ? navigation.navigate('Login')
+                  : navigation.goBack();
+              }}
               type="text"
               buttonColor=""
               className="-ml-2 pr-2"
             />
           )}
         </View>
-        <View className="mt-0.5 shrink-0 items-center justify-center">
+        <View className="mt-0.5 h-7 shrink-0 items-center justify-center">
           <Text
-            className={`${
-              contexts?.colorScheme === 'dark' ? 'text-white' : 'text-black'
-            } flex-1 text-center`}>
+            className={`${dark} mt-0.5 flex-1 text-center`}
+            type="subtitleSmall">
             {center}
           </Text>
         </View>
@@ -91,16 +101,13 @@ const Header = ({
       <View
         className={`w-full ${
           border
-            ? contexts?.colorScheme === 'dark'
-              ? 'border-b border-neutral-600'
-              : 'border-b border-neutral-300'
+            ? colorScheme === 'dark'
+              ? 'border-b border-gray-800'
+              : 'border-b border-gray-400'
             : ''
         }`}>
         <Animated.View
-          className={`absolute border-b-2 ${
-            border &&
-            (contexts?.colorScheme === 'dark' ? 'border-white' : 'border-black')
-          } `}
+          className={`absolute border-b-2 ${border && 'border-primary'} `}
           style={[animatedStyles, styles.animatingBorder]}
         />
       </View>
