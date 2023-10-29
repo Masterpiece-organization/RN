@@ -18,10 +18,15 @@ const Avatar = ({
   const IconStyle = clsx(iconClassName, defaultStyle.icon);
 
   return (
-    // <View className="mr-6 h-16 w-16 items-center justify-center rounded-full bg-neutral-600">
     <View className={WrapStyle}>
       {!uri ? (
-        <ProfileIcon strokeColor="white" />
+        <ProfileIcon
+          strokeColor="#b0b0b0"
+          width={34}
+          height={34}
+          fillColor="#b0b0b0"
+          focused={true}
+        />
       ) : (
         <Image
           source={{uri: uri}}
@@ -32,9 +37,9 @@ const Avatar = ({
       <Button
         label=""
         onPress={handleOnPress}
-        buttonColor={'bg-orange-400'}
+        buttonColor={'bg-white'}
         className={IconStyle}
-        icon={<CameraIcon color="white" />}
+        icon={<CameraIcon color="#b0b0b0" />}
         disabled={disabled}
       />
     </View>
@@ -44,6 +49,6 @@ const Avatar = ({
 export default Avatar;
 
 const defaultStyle = {
-  wrap: 'items-center justify-center rounded-full bg-neutral-600',
-  icon: 'absolute -right-1 bottom-0 rounded-full border-2 border-white dark:border-neutral-800',
+  wrap: 'items-center justify-center rounded-full bg-gray-400',
+  icon: 'absolute -right-1 bottom-0 rounded-full border border-gray-400',
 };
