@@ -14,21 +14,21 @@ interface CheckBoxProps {
 }
 
 const CheckBox = ({checked, error}: CheckBoxProps) => {
-  const contexts = useMainContext();
+  const {colorScheme} = useMainContext();
 
   const Colors = useMemo(() => {
     return {
       notChecked: {
-        borderColor: contexts?.colorScheme === 'dark' ? '#fff' : '#404040',
-        color: contexts?.colorScheme === 'dark' ? '#121212' : '#fff',
+        borderColor: colorScheme === 'dark' ? '#fff' : '#404040',
+        color: colorScheme === 'dark' ? '#121212' : '#fff',
       },
 
       checked: {
-        borderColor: contexts?.colorScheme === 'dark' ? '#fff' : '#8143f2',
-        color: contexts?.colorScheme === 'dark' ? '#fff' : '#8143f2',
+        borderColor: colorScheme === 'dark' ? '#fff' : '#8143f2',
+        color: colorScheme === 'dark' ? '#fff' : '#8143f2',
       },
     };
-  }, [contexts?.colorScheme]);
+  }, [colorScheme]);
 
   const progress = useDerivedValue(() => {
     return withTiming(checked ? 1 : 0);
