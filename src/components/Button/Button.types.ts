@@ -5,6 +5,7 @@ export interface ButtonType {
   buttonColor?: string;
   textColor?: string;
   textSize?: string;
+  textFont?: string;
   textType?:
     | 'title'
     | 'subtitle'
