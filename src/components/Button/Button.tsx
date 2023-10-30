@@ -12,6 +12,7 @@ const Button = ({
   textColor,
   textSize,
   textType,
+  textFont = 'font-bodySemiBold',
   onPress,
   type = 'primary',
   disabled = false,
@@ -43,6 +44,7 @@ const Button = ({
       ? defaultStyle.disabledTextColor
       : textColor ?? defaultStyle.textColor,
     textSize,
+    textFont,
   );
 
   const buttonWrapStyle = clsx(rowCenter, buttonWrap);
@@ -73,6 +75,6 @@ const defaultStyle = {
   textButton: '',
   outlinedButton:
     'w-100 h-[52px] justify-center items-center rounded-lg flex-row border',
-  textColor: 'text-white font-bodySemiBold',
+  textColor: 'text-white',
   disabledTextColor: 'text-gray-600',
 };
