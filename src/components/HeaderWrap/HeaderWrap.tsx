@@ -1,14 +1,16 @@
-import React from 'react';
 import Header from '../Header/Header';
 import {SafeAreaView, Dimensions} from 'react-native';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import Setting from '@/assets/icons/setting.svg';
 import {useMainContext} from '@/contexts/MainContext';
 import {HeaderDataType, GetHeaderDataType} from './HeaderWrap.type';
-import Button from '../Button';
+import {Button} from '@/components';
+import useTheme from '@/hooks/useTheme';
 
 const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
   const contexts = useMainContext();
+  const {bgTheme} = useTheme();
+  const {blackAndWhite} = bgTheme();
 
   const {
     route: {name, params: routeParams},
@@ -25,6 +27,23 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
       typeof params === 'object' &&
       params !== null &&
       params['someKey'] === 'resetPassword';
+
+    let SettingName;
+    if (params?.page) {
+      switch (params?.page) {
+        case 'theme':
+          SettingName = '테마';
+          break;
+        case 'notification':
+          SettingName = '푸시알림설정';
+          break;
+        case 'terms':
+          SettingName = '개인정보설정';
+          break;
+        default:
+          SettingName = '설정';
+      }
+    }
 
     return {
       Login: {
@@ -81,7 +100,7 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
       },
       My: {
         left: false,
-        border: false,
+        border: true,
         center: '마이페이지',
         right: (
           <Button
@@ -90,20 +109,30 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
             buttonColor=""
             className="h-6"
             icon={
-              <Setting color={colorScheme === 'dark' ? 'white' : 'black'} />
+              <Setting color={colorScheme === 'dark' ? 'white' : '#404040'} />
             }
           />
         ),
       },
       Setting: {
         left: true,
-        border: false,
+        border: true,
         center: '설정',
+      },
+      SettingDetail: {
+        left: true,
+        border: true,
+        center: SettingName,
       },
       EditProfile: {
         left: true,
-        border: false,
+        border: true,
         center: '프로필 수정',
+      },
+      MatchHistory: {
+        left: true,
+        border: true,
+        center: '경기이력',
       },
     };
   };
@@ -114,7 +143,7 @@ const HeaderWrap = ({...props}: NativeStackHeaderProps) => {
   })[name];
 
   return (
-    <SafeAreaView className="bg-white dark:bg-black">
+    <SafeAreaView className={blackAndWhite}>
       <Header {...headerData} {...props} />
     </SafeAreaView>
   );

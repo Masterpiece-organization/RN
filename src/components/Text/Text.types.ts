@@ -1,5 +1,6 @@
 export interface TextType {
   textColor?: string;
+  textColortype?: 'black' | 'dark' | 'grey';
   type?:
     | 'title'
     | 'subtitle'
@@ -10,5 +11,6 @@ export interface TextType {
     | 'small';
   className?: string;
   onPress?: () => void;
+  numberOfLines?: number;
   children?: React.ReactNode | string;
 }
