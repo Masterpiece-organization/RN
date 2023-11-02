@@ -6,6 +6,7 @@ module.exports = {
       backgroundColor: {
         black: '#121212',
         gray: {
+          900: '#2e2e2e',
           800: '#404040',
           600: '#B0B0B0',
           400: '#E4E4E4',
@@ -23,6 +24,7 @@ module.exports = {
       borderColor: {
         black: '#121212',
         gray: {
+          900: '#2e2e2e',
           800: '#404040',
           600: '#B0B0B0',
           400: '#E4E4E4',
@@ -40,13 +42,13 @@ module.exports = {
       textColor: {
         black: '#121212',
         gray: {
+          900: '#2e2e2e',
           800: '#404040',
           600: '#B0B0B0',
           400: '#E4E4E4',
           200: '#F0F0F0',
         },
         primary: '#9866F4',
-
         'light-red': '#AC1E11',
         'dark-red': '#EA3829',
         yellow: '#FFBB33',
@@ -61,26 +63,28 @@ module.exports = {
         titleBold: ['GmarketSansBold'],
         bodyUltraLight: ['AppleSDGothicNeo-UltraLight'],
         bodyLight: ['AppleSDGothicNeo-Light'],
+        bodyRegular: ['AppleSDGothicNeo-Regular'],
         bodyMedium: ['AppleSDGothicNeo-Medium'],
+        bodySemiBold: ['AppleSDGothicNeo-SemiBold'],
         bodyLightEng: ['SFProText-Light'],
       },
       margin: {
         xs: '10px',
         sm: '16px',
-        base: '20px',
+        base: '18px',
         md: '22px',
         lg: '30px',
         xl: '36px',
-        xxl: '86px',
+        xxl: '124px',
       },
       padding: {
         xs: '10px',
         sm: '16px',
-        base: '20px',
+        base: '18px',
         md: '22px',
         lg: '30px',
         xl: '36px',
-        xxl: '86px',
+        xxl: '124px',
       },
     },
   },
