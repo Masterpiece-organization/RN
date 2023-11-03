@@ -1,4 +1,3 @@
-import {EditProfile} from '@/screens/Setting/EditProfile';
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
@@ -11,14 +10,19 @@ export type RootStackParamList = {
   ResetPw: {email: string};
   CheckEmail: undefined;
   Nickname: undefined;
-  Position: {nickname: string};
+  Position: {nickname?: string; position?: string};
   Profile: undefined;
-  EditProfile: undefined;
 };
 
 export type MainRootStackParamList = {
   Tabs: undefined;
   Setting: undefined;
+  SettingDetail: {page: string};
+};
+
+export type SettingRootStackParamList = {
+  EditProfile: undefined;
+  MatchHistory: undefined;
 };
 
 export type MainRootTabsParamList = {
@@ -31,4 +35,5 @@ export type MainRootTabsParamList = {
 export interface BottomIconWrapTypes {
   color: string;
   focused: boolean;
+  className: string;
 }
