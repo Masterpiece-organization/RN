@@ -1,54 +1,83 @@
-import {User as ProfileIcon} from '@/assets/icons/iconComponents';
 import {View, Image} from 'react-native';
 import {Button} from '@/components';
-import CameraIcon from '@/assets/icons/camera.svg';
-import {AvatarType} from './Avatar.types';
 import {clsx} from 'clsx';
+import {
+  StyledCameraIcon,
+  StyledMyIcon,
+  StyledClubLogoIcon,
+} from '@/constants/icons';
+import {defaultAvartarWrapStyle} from '@/theme';
+
+export const SIZE_TYPES = ['small', 'normal', 'large'];
+export const AVARTAR_TYPES = ['user', 'club'];
+export type SizeType = (typeof SIZE_TYPES)[number];
+export type AvartarType = (typeof AVARTAR_TYPES)[number];
+
+export interface AvatarProps {
+  size?: SizeType;
+  type?: AvartarType;
+  source?: string;
+  isIcon?: boolean;
+  onPress?: () => void;
+  className?: string;
+}
+
+const variants: {[size in SizeType]: string} = {
+  small: `w-10 h-10 ${defaultAvartarWrapStyle}`,
+  medium: `w-16 h-16 ${defaultAvartarWrapStyle}`,
+  large: `w-[100px] h-[100px] ${defaultAvartarWrapStyle}`,
+};
+
+type IconSize = {[key in SizeType]: number};
+
+const iconSize: IconSize = {
+  small: 18,
+  medium: 24,
+  large: 36,
+};
 
 const Avatar = ({
+  size = 'medium',
+  type = 'user',
+  source,
+  isIcon = false,
+  onPress,
   className,
-  pickerResponse,
-  iconClassName,
-  handleOnPress,
-  disabled,
-}: AvatarType) => {
-  const uri = pickerResponse?.assets && pickerResponse.assets[0].uri;
-
-  const WrapStyle = clsx(className, defaultStyle.wrap);
-  const IconStyle = clsx(iconClassName, defaultStyle.icon);
+}: AvatarProps) => {
+  const avatarStyle = clsx(variants[size], className);
 
   return (
-    <View className={WrapStyle}>
-      {!uri ? (
-        <ProfileIcon
-          strokeColor="#b0b0b0"
-          width={34}
-          height={34}
-          fillColor="#b0b0b0"
-          focused={true}
-        />
-      ) : (
+    <View className={avatarStyle}>
+      {source ? (
         <Image
-          source={{uri: uri}}
-          className="h-full w-full rounded-full"
+          source={{uri: source}}
+          // source={require('@/assets/images/logo.png')}
+          className="h-full w-full rounded-full border border-gray-50 dark:border-gray-800"
           resizeMode="cover"
         />
+      ) : type === 'user' ? (
+        <StyledMyIcon
+          className="color-gray-300"
+          width={iconSize[size]}
+          height={iconSize[size]}
+        />
+      ) : (
+        <StyledClubLogoIcon
+          className="color-gray-300"
+          width={iconSize[size] + 2}
+          height={iconSize[size] + 2}
+        />
       )}
-      <Button
-        label=""
-        onPress={handleOnPress}
-        buttonColor={'bg-white'}
-        className={IconStyle}
-        icon={<CameraIcon color="#b0b0b0" />}
-        disabled={disabled}
-      />
+      {isIcon && (
+        <Button
+          onPress={onPress}
+          type="text"
+          variant="custom"
+          className="absolute bottom-0 right-0 rounded-full border border-gray-100 bg-white p-2 dark:border-gray-900 dark:bg-gray-600">
+          <StyledCameraIcon className="color-gray-300" width={16} height={16} />
+        </Button>
+      )}
     </View>
   );
 };
-
 export default Avatar;
-
-const defaultStyle = {
-  wrap: 'items-center justify-center rounded-full bg-gray-400',
-  icon: 'absolute -right-1 bottom-0 rounded-full border border-gray-400',
-};

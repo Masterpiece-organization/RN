@@ -1,4 +1,5 @@
 import {useMemo} from 'react';
+import {useColorScheme} from 'react-native';
 import CheckIcon from '@/assets/icons/iconComponents/CheckBox';
 import Animated, {
   interpolateColor,
@@ -6,63 +7,81 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useMainContext} from '@/contexts/MainContext';
 
-interface CheckBoxProps {
+export const CHECKBOX_TYPES = ['filled', 'solid'] as const;
+
+export type CheckBoxType = (typeof CHECKBOX_TYPES)[number];
+
+export interface CheckBoxProps {
+  type?: CheckBoxType;
   checked: Boolean;
-  error?: boolean;
 }
 
-const CheckBox = ({checked, error}: CheckBoxProps) => {
-  const {colorScheme} = useMainContext();
+const defaultCheckBoxStyle =
+  'h-6 w-6 items-center justify-center rounded-full border-0';
+
+const CheckBox = ({type = 'filled', checked}: CheckBoxProps) => {
+  const colorScheme = useColorScheme();
 
   const Colors = useMemo(() => {
     return {
       notChecked: {
-        borderColor: colorScheme === 'dark' ? '#fff' : '#404040',
-        color: colorScheme === 'dark' ? '#121212' : '#fff',
+        backgroundColor: colorScheme === 'light' ? '#DEE0E2' : '#3E4042',
+        color: '#B6B8BA',
       },
 
       checked: {
-        borderColor: colorScheme === 'dark' ? '#fff' : '#8143f2',
-        color: colorScheme === 'dark' ? '#fff' : '#8143f2',
+        backgroundColor: '#3D9BFF',
+        color: '#fff',
       },
     };
-  }, [colorScheme]);
+  }, []);
 
   const progress = useDerivedValue(() => {
-    return withTiming(checked ? 1 : 0);
+    return withTiming(checked ? 1 : 0, {
+      duration: 200,
+    });
   });
 
-  const borderStyle = useAnimatedStyle(() => {
-    const borderColor = interpolateColor(
+  const backgroundStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
       progress.value,
       [0, 1],
-      [Colors.notChecked.borderColor, Colors.checked.borderColor],
+      [Colors.notChecked.backgroundColor, Colors.checked.backgroundColor],
     );
 
     return {
-      borderColor,
+      backgroundColor,
       borderWidth: 2,
       borderRadius: 9999,
     };
   });
 
-  const animatedStrokeColor = useDerivedValue(() => {
+  const filledStrokeColor = useDerivedValue(() => {
     return interpolateColor(
       progress.value,
       [0, 1],
-      [Colors.notChecked.color, Colors.checked.color], // 예시 색상입니다; 실제 색상 값으로 교체해야 합니다.
+      [Colors.notChecked.color, Colors.checked.color],
+    );
+  });
+
+  const solidStrokeColor = useDerivedValue(() => {
+    return interpolateColor(
+      progress.value,
+      [0, 1],
+      [Colors.notChecked.color, Colors.checked.backgroundColor],
     );
   });
 
   return (
     <Animated.View
-      className={`h-5 w-5 items-center justify-center rounded border ${
-        error && 'border-dark-red'
-      }`}
-      style={borderStyle}>
-      <CheckIcon animatedStroke={animatedStrokeColor} />
+      className={defaultCheckBoxStyle}
+      style={type === 'filled' ? backgroundStyle : null}>
+      <CheckIcon
+        animatedStroke={
+          type === 'filled' ? filledStrokeColor : solidStrokeColor
+        }
+      />
     </Animated.View>
   );
 };

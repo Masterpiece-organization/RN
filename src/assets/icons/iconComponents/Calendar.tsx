@@ -1,5 +1,5 @@
 import Svg, {Path} from 'react-native-svg';
-import {SvgIconProps} from '@/typings/IconTypeList';
+import {SvgIconProps} from '@/types/IconTypeList';
 
 const Calendar = ({
   fillColor = 'none',

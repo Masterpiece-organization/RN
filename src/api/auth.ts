@@ -3,7 +3,7 @@ import {
   AxiosInstance,
   isAxiosError as isErrorfromAxios,
 } from 'axios';
-
+import {client} from './axiosClient';
 interface ErrorResponse {
   // data: string;
   error: {
@@ -14,9 +14,14 @@ interface ErrorResponse {
   };
 }
 
-interface authProps extends authEmailProps {
+interface AuthProps {
+  email: string;
   password: string;
 }
+
+// interface authProps extends authEmailProps {
+//   password: string;
+// }
 
 interface authNumberProps extends authEmailProps {
   auth_number: number;
@@ -43,31 +48,16 @@ const isAxiosError = (err: AxiosError) => {
   }
 };
 
-export async function signUp({email, password, instance}: authProps) {
+export async function loginEmail({email, password}: AuthProps) {
   const data = {
     email,
     password,
   };
 
   try {
-    const res = await instance.post('user/email/register', data);
-    return res.data;
-  } catch (err) {
-    if (isErrorfromAxios(err)) {
-      return isAxiosError(err);
-    }
-    console.error(err);
-  }
-}
-
-export async function loginEmail({email, password, instance}: authProps) {
-  const data = {
-    email,
-    password,
-  };
-
-  try {
-    const res = await instance.post('user/email/login', data);
+    const res = await client.post('user/email/login', data, {
+      authorization: false,
+    });
 
     return res.data;
   } catch (err) {
@@ -78,9 +68,28 @@ export async function loginEmail({email, password, instance}: authProps) {
   }
 }
 
-export async function getUserInfo(instance: AxiosInstance) {
+export async function signUp({email, password}: AuthProps) {
+  const data = {
+    email,
+    password,
+  };
+
   try {
-    const res = await instance.get('user/me');
+    const res = await client.post('user/email/register', data, {
+      authorization: false,
+    });
+    return res.data;
+  } catch (err) {
+    if (isErrorfromAxios(err)) {
+      return isAxiosError(err);
+    }
+    console.error(err);
+  }
+}
+
+export async function getUserInfo() {
+  try {
+    const res = await client.get('user/me');
 
     return res.data;
   } catch (err) {
@@ -112,9 +121,13 @@ export async function updateUserInfo({
   }
 }
 
-export async function checkEmail({email, instance}: authEmailProps) {
+export async function checkEmail({email}: AuthProps) {
   try {
-    const res = await instance.post('user/email/request/verify/code', {email});
+    const res = await client.post(
+      'user/email/request/verify/code',
+      {email},
+      {authorization: false},
+    );
 
     return res.data;
   } catch (err) {
@@ -162,7 +175,7 @@ export async function verifyAuthCode({
   }
 }
 
-export async function resetPassword({email, password, instance}: authProps) {
+export async function resetPassword({email, password, instance}: AuthProps) {
   const data = {
     email,
     password,

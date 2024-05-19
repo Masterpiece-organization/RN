@@ -1,97 +1,117 @@
-import {View, TextInput as RNTextInput} from 'react-native';
-import {useController, useFormContext} from 'react-hook-form';
-import {FormInputType} from './TextInput.types';
-import {Text} from '@components/index';
-import {clsx} from 'clsx';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useMainContext} from '@/contexts/MainContext';
+import {
+  View,
+  TextInput as RNTextInput,
+  StyleSheet,
+  KeyboardTypeOptions,
+  ReturnKeyTypeOptions,
+} from "react-native";
+import { Controller, UseControllerProps } from "react-hook-form";
+import { Text } from "@components/index";
+import { clsx } from "clsx";
+import { defaultInputStyle } from "@/theme";
 
-const ControlledInput = (props: FormInputType) => {
-  const contexts = useMainContext();
+export const TEXT_INPUT_TYPES = ["withLabel", "withoutLabel"] as const;
 
-  const formContext = useFormContext();
-  const {formState} = formContext;
+export type TextInputType = (typeof TEXT_INPUT_TYPES)[number];
 
-  const {name, label, rules, defaultValue, className, editable, ...inputProps} =
-    props;
+export interface TextInputProps extends UseControllerProps {
+  name: string;
+  placeholder?: string;
+  label?: string;
+  keyboardType?: KeyboardTypeOptions;
+  editable?: boolean;
+  className?: string;
+  secureTextEntry?: boolean;
+  inputAccessoryViewID?: string;
+  multiline?: boolean;
+  maxLength?: number;
+  autoFocus?: boolean;
+  returnKeyType?: ReturnKeyTypeOptions;
+}
 
-  const {field} = useController({name, rules, defaultValue});
-
-  const hasError = Boolean(formState?.errors[name]);
-
-  const containerStyle = clsx(styles.container, className);
-  const inputStyle = clsx(
-    editable === undefined || editable === true
-      ? hasError
-        ? 'text-dark-red'
-        : contexts?.colorScheme === 'dark'
-        ? 'text-white'
-        : 'text-black'
-      : 'text-gray-600',
-    styles.input,
-    hasError ? 'border-dark-red' : 'border-gray-600',
-  );
-
-  const error = formState?.errors[name]?.message as string;
+export const TextInput = ({
+  control,
+  name,
+  placeholder,
+  label,
+  keyboardType = "default",
+  editable = true,
+  className,
+  rules,
+  secureTextEntry = false,
+  inputAccessoryViewID,
+  returnKeyType,
+  autoFocus = false,
+  ...props
+}: TextInputProps) => {
+  const textInputStyle = clsx(defaultInputStyle, className);
 
   return (
-    <View className={containerStyle}>
-      {label && <Text className={styles.label}>{label}</Text>}
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{x: 0, y: 0}}
-        scrollEnabled={false}>
-        <View className="justify-center">
-          <RNTextInput
-            autoCapitalize="none"
-            textAlign="left"
-            className={inputStyle}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            value={field.value}
-            placeholderTextColor={hasError ? '#EA3829' : '#B0B0B0'}
-            editable={editable}
-            {...inputProps}
-          />
-        </View>
-      </KeyboardAwareScrollView>
-
-      <View>
-        {hasError && (
-          <Text
-            textColor="text-dark-red"
-            type="bodySmall"
-            className={styles.errorContainer}>
-            {error}
-          </Text>
-        )}
-      </View>
-    </View>
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({
+        field: { value, onChange, onBlur },
+        fieldState: { error },
+      }) => (
+        <>
+          {label && (
+            <Text className="mb-2" color="text-gray-700 dark:text-gray-300">
+              {label}
+            </Text>
+          )}
+          <View
+            className={`${textInputStyle} ${error ? "border-red" : ""} ${
+              !editable ? "bg-gray-100 dark:bg-gray-700" : ""
+            }`}
+          >
+            <RNTextInput
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              style={[
+                styles.text,
+                error && styles.error,
+                !editable && styles.disabled,
+              ]}
+              keyboardType={keyboardType}
+              placeholder={placeholder}
+              placeholderTextColor={"#B6B8BA"}
+              className="color-black dark:color-white h-full"
+              {...props}
+              editable={editable}
+              secureTextEntry={secureTextEntry}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType={returnKeyType ?? "done"}
+              inputAccessoryViewID={inputAccessoryViewID}
+              autoFocus={autoFocus}
+            />
+          </View>
+          {error && error.message && (
+            <Text color="text-red" type="caption" className="-mt-1 mb-2">
+              {error.message || ""}
+            </Text>
+          )}
+        </>
+      )}
+    />
   );
-};
-
-export const TextInput = (props: FormInputType) => {
-  const {name, setFormError} = props;
-
-  const formContext = useFormContext();
-
-  // Placeholder until input name is initialized
-  if (!formContext || !name) {
-    const msg = !formContext
-      ? 'TextInput must be wrapped by the FormProvider'
-      : 'Name must be defined';
-    console.error(msg);
-    setFormError(true);
-    return null;
-  }
-
-  return <ControlledInput {...props} />;
-};
-
-const styles = {
-  container: '',
-  label: '',
-  input: 'p-4 h-[52px] border rounded-lg',
-  errorContainer: 'my-1',
 };
 
 export default TextInput;
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 16,
+    fontFamily: "WantedSans-Medium",
+    textAlignVertical: "top",
+  },
+  error: {
+    color: "#EA3829",
+  },
+  disabled: {
+    color: "#B6B8BA",
+  },
+});

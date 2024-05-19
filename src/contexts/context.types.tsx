@@ -4,6 +4,8 @@ import {ColorSchemeName} from 'react-native';
 
 export interface ContextState {
   colorScheme: ColorSchemeName;
+  themeMode: 'light' | 'dark' | 'system';
+  setMode: (mode: 'light' | 'dark' | 'system') => void;
   isMutating: number;
   user: UserStateProps;
   setUser: Dispatch<SetStateAction<UserStateProps>>;

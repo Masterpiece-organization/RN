@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {View, SafeAreaView, Dimensions} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootStackParamList} from '@/typings/RootStackParamList';
 import {Text, Button} from '@/components';
 import Animated, {
   useSharedValue,
@@ -10,9 +9,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
-export type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
-
-const Home = ({navigation}: HomeScreenProps) => {
+const Home = ({navigation}) => {
   const {height} = Dimensions.get('window');
 
   const textTranslateY = useSharedValue(height / 4);
@@ -59,21 +56,19 @@ const Home = ({navigation}: HomeScreenProps) => {
 
       return () => clearInterval(interval);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isImageLoaded]);
 
   return (
     <View className="flex-1 justify-between">
-      <SafeAreaView className="mx-lg  mt-xxl">
+      <SafeAreaView className="mx-lg mt-mega">
         <Animated.View style={textAnimatedStyle}>
-          <Text
-            className="mb-base font-titleBold"
-            textColor="text-white"
-            type="title">
+          <Text className="mb-base" textColor="white" textType="subHeadingBold">
             축구로 하나가 되는{'\n'}우리들만의 리그
           </Text>
         </Animated.View>
         <Animated.View style={contentsAnimatedStyle}>
-          <Text type="subtitle" textColor="text-white">
+          <Text textType="subHeading" textColor="white">
             지금 바로 가입하거나 로그인하여 즐거운{'\n'}축구 경험을 시작하세요!
           </Text>
         </Animated.View>
@@ -85,14 +80,13 @@ const Home = ({navigation}: HomeScreenProps) => {
             <Button
               label="로그인"
               onPress={() => navigation.navigate('Login')}
-              buttonColor="bg-primary"
               className="mb-xs"
             />
             <Button
               label="회원가입"
               onPress={() => navigation.navigate('Terms')}
-              textColor="text-black"
-              buttonColor="bg-white"
+              className="bg-white"
+              textColor="fixed_black"
             />
           </View>
         </Animated.View>

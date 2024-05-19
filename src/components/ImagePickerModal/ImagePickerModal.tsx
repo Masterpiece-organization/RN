@@ -1,72 +1,86 @@
-import {Modal, SafeAreaView, TouchableWithoutFeedback} from 'react-native';
-import {View} from 'react-native';
-import Button from '../Button';
-import {ImagePickerModalType} from './ImagePickerModal.type';
-import {useMainContext} from '@/contexts/MainContext';
+import {useEffect} from 'react';
+import {View, Modal, Platform, ActionSheetIOS, Pressable} from 'react-native';
+import {StyledCameraIcon, StyledImageIcon} from '@/constants/icons';
+import {Text} from '@/components';
 
 const ImagePickerModal = ({
-  isVisible,
-  setIsVisible,
+  visible = false,
+  onClose,
+  isUploaded,
+  setImageResponse,
   onImageLibraryPress,
   onCameraPress,
-}: ImagePickerModalType) => {
-  const contexts = useMainContext();
+}) => {
+  useEffect(() => {
+    if (Platform.OS === 'ios' && visible) {
+      const options = ['카메라로 촬영하기', '사진 선택하기'];
+      let destructiveButtonIndex = -1;
+      if (isUploaded) {
+        options.push('프로필 사진 삭제');
+        destructiveButtonIndex = options.length - 1; // '프로필 사진 삭제'를 destructive 버튼으로 설정
+      }
+      options.push('취소');
+      const cancelButtonIndex = options.length - 1;
+
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          cancelButtonIndex,
+          // cancelButtonTintColor: 'red',
+          destructiveButtonIndex,
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            console.log('카메라 촬영');
+            onCameraPress();
+          } else if (buttonIndex === 1) {
+            console.log('사진 선택');
+            onImageLibraryPress();
+          } else if (isUploaded && buttonIndex === destructiveButtonIndex) {
+            console.log('프로필 사진 삭제');
+            setImageResponse(null);
+            onClose();
+          }
+          if (buttonIndex === cancelButtonIndex) {
+            onClose(); // 모달을 닫음
+          }
+        },
+      );
+    }
+  }, [visible]);
 
   return (
     <Modal
-      animationType={'fade'}
-      visible={isVisible}
+      visible={visible}
       transparent={true}
-      onRequestClose={() => {
-        setIsVisible(false);
-      }}>
-      <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
-        <SafeAreaView className="flex-1 justify-end bg-black/50">
-          <View className="gap-4 px-5">
-            <View
-              className={`${
-                contexts?.colorScheme === 'dark' ? 'bg-neutral-800' : 'bg-black'
-              } rounded-lg
-            `}>
-              <View className="border-b border-b-neutral-600">
-                <Button
-                  label="앨범에서 선택"
-                  onPress={onImageLibraryPress}
-                  buttonColor=""
-                  textColor={
-                    contexts?.colorScheme === 'dark'
-                      ? 'text-white'
-                      : 'text-white'
-                  }
-                />
-              </View>
-
-              <Button
-                label="사진 찍기"
-                onPress={onCameraPress}
-                buttonColor=""
-                textColor={
-                  contexts?.colorScheme === 'dark' ? 'text-white' : 'text-white'
-                }
-              />
-            </View>
-            <View>
-              <Button
-                label="취소"
-                onPress={() => setIsVisible(false)}
-                buttonColor={
-                  contexts?.colorScheme === 'dark'
-                    ? 'bg-neutral-800'
-                    : 'bg-black'
-                }
-                textColor={
-                  contexts?.colorScheme === 'dark' ? 'text-white' : 'text-white'
-                }
-              />
-            </View>
-          </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+      animationType="fade"
+      onRequestClose={onClose}>
+      <Pressable
+        className="flex-1 items-center justify-center bg-black/60"
+        onPress={onClose}>
+        <View className="w-72 rounded-lg bg-white" style={{elevation: 2}}>
+          <Pressable
+            className="flex-row items-center p-4"
+            android_ripple={{color: '#eee'}}>
+            <StyledCameraIcon
+              className="color-gray-200 mr-2"
+              width={22}
+              height={22}
+            />
+            <Text>카메라로 촬영하기</Text>
+          </Pressable>
+          <Pressable
+            className="flex-row items-center p-4"
+            android_ripple={{color: '#eee'}}>
+            <StyledImageIcon
+              className="color-gray-200 mr-2"
+              width={22}
+              height={22}
+            />
+            <Text>사진 선택하기</Text>
+          </Pressable>
+        </View>
+      </Pressable>
     </Modal>
   );
 };

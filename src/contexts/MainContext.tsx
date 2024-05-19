@@ -1,16 +1,48 @@
-import {createContext, ReactNode, useContext, useState} from 'react';
+import {createContext, useContext, useState} from 'react';
 import {useColorScheme} from 'react-native';
 import {useIsMutating} from '@tanstack/react-query';
-import {AuthStateProps, ContextState, UserStateProps} from './context.types';
+import {
+  AuthStateProps,
+  ContextState,
+  UserStateProps,
+  ContextProps,
+} from '@/types/contextTypeList';
 import {resetGenericPassword} from 'react-native-keychain';
-interface ContextProps {
-  children: ReactNode;
-}
 
-export const MainContext = createContext<ContextState | null>(null);
+const defaultContextValue: ContextState = {
+  colorScheme: 'light',
+  themeMode: 'system',
+  setMode: () => {},
+  isMutating: 0,
+  user: {
+    email: '',
+    nickname: '',
+    join_profile: [],
+  },
+  setUser: () => {},
+  getAccessToken: () => null,
+  authState: {
+    accessToken: null,
+    refreshToken: null,
+    authenticated: false,
+  },
+  setAuthState: () => {},
+  logout: () => Promise.resolve(),
+};
+
+export const MainContext = createContext<ContextState>(defaultContextValue);
 
 export function MainContextProvider({children}: ContextProps) {
-  const colorScheme = useColorScheme();
+  const systemColorScheme = useColorScheme();
+  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system'>(
+    'system',
+  );
+
+  const setMode = (mode: 'light' | 'dark' | 'system') => {
+    setThemeMode(mode);
+  };
+
+  let colorScheme = themeMode === 'system' ? systemColorScheme : themeMode;
 
   const isMutating = useIsMutating();
 
@@ -43,6 +75,8 @@ export function MainContextProvider({children}: ContextProps) {
     <MainContext.Provider
       value={{
         colorScheme,
+        themeMode,
+        setMode,
         isMutating,
         user,
         setUser,

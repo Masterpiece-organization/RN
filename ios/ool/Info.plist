@@ -49,10 +49,37 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) 서비스 이용을 위해 카메라 접근 권한이 필요합니다.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>서비스 이용을 위해 위치 정보 접근 권한이 필요합니다.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>서비스 이용을 위해 위치 정보 접근 권한이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>서비스 이용을 위해 위치 정보 접근 권한이 필요합니다.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) 서비스 이용을 위해 사진첩 접근 권한이 필요합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) 서비스 이용을 위해 사진첩 접근 권한이 필요합니다.</string>
+	<key>NSUserTrackingUsageDescription</key>
+  	<string>$(PRODUCT_NAME) 이 앱은 광고 및 분석 목적으로 사용자의 데이터를 추적하려고 합니다. 광고 맞춤화 및 통계 분석을 위해 귀하의 동의가 필요합니다.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GmarketSansBold.otf</string>
+		<string>GmarketSansMedium.otf</string>
+		<string>WantedSans-Bold.otf</string>
+		<string>WantedSans-Medium.otf</string>
+		<string>WantedSans-Regular.otf</string>
+		<string>WantedSans-SemiBold.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -60,30 +87,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
-	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your camera</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>AppleSDGothicNeo-Light.otf</string>
-		<string>AppleSDGothicNeo-Medium.otf</string>
-		<string>AppleSDGothicNeo-UltraLight.otf</string>
-		<string>SFProText-Light.otf</string>
-		<string>GmarketSansBold.otf</string>
-		<string>GmarketSansLight.otf</string>
-		<string>GmarketSansMedium.otf</string>
-		<string>AppleSDGothicNeo-Regular.otf</string>
-		<string>AppleSDGothicNeo-SemiBold.ttf</string>
-	</array>
 </dict>
 </plist>

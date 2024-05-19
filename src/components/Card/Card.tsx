@@ -1,32 +1,20 @@
 import {View} from 'react-native';
-import Text from '../Text';
-import {CardPropsType} from './Card.type';
-import {clsx} from 'clsx';
-import useTheme from '@/hooks/useTheme';
 
-const Card = ({title, titleButton, className, children}: CardPropsType) => {
-  const {borderColorTheme, cardBgTheme} = useTheme();
-  const {borderDefault} = borderColorTheme();
-  const {cardBg} = cardBgTheme();
+interface CardProps {
+  size?: 'small' | 'medium';
+  className?: string;
+  children: React.ReactNode;
+}
 
-  const WrapStyle = clsx(className, defaultStyle.default, cardBg);
-
+const Card = ({size = 'small', className, children}: CardProps) => {
   return (
-    <View className={WrapStyle}>
-      {title && (
-        <View
-          className={`flex-row items-center justify-between border-b px-5 py-sm ${borderDefault}`}>
-          <Text type="bodySmall">{title}</Text>
-          {titleButton}
-        </View>
-      )}
+    <View
+      className={`${
+        size === 'small' ? 'py-4' : 'py-5'
+      } rounded-lg bg-white px-5 dark:bg-gray-950 ${className}`}>
       {children}
     </View>
   );
 };
 
 export default Card;
-
-const defaultStyle = {
-  default: 'rounded-lg border',
-};

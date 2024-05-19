@@ -1,80 +1,129 @@
-import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
-import {ButtonType} from './Button.types';
-import Loader from '../Loader';
+import {Pressable, View} from 'react-native';
 import {clsx} from 'clsx';
 import Text from '../Text';
-import {rowCenter} from '@/theme';
+import {TextType} from '../Text/Text';
+import LinearGradient from 'react-native-linear-gradient';
+import {useColorScheme} from 'react-native';
+import {defaultButtonStyle, defualtOutlinedStyle} from '@/theme';
+
+export const BUTTON_TYPES = ['filled', 'text', 'outlined'] as const;
+export const BUTTON_VARIANT_TYPES = [
+  'primary',
+  'secondary',
+  'split',
+  'custom',
+] as const;
+
+export type ButtonType = (typeof BUTTON_TYPES)[number];
+export type ButtonVariantType = (typeof BUTTON_VARIANT_TYPES)[number];
+
+export interface ButtonProps {
+  label?: string;
+  labelColor?: string;
+  textType?: TextType;
+  type?: ButtonType;
+  variant?: ButtonVariantType;
+  color?: string;
+  onPress?: () => void;
+  isOnPressed?: boolean;
+  disabled?: boolean;
+  isOnKeyboard?: boolean;
+  float?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+const variants: {
+  [type in ButtonType]: Partial<{[variant in ButtonVariantType]: string}>;
+} = {
+  filled: {
+    primary: `${defaultButtonStyle} bg-primary active:bg-primaryActive`,
+    secondary: `${defaultButtonStyle} bg-gray-950 active:bg-black dark:active:bg-gray-800`,
+    custom: `${defaultButtonStyle}`,
+  },
+  outlined: {
+    primary: `${defaultButtonStyle} ${defualtOutlinedStyle}`,
+    split: `${defaultButtonStyle} ${defualtOutlinedStyle} justify-between`,
+  },
+  text: {
+    primary: 'active:bg-gray-100 dark:active:bg-gray-950 p-2 rounded-lg',
+    split: 'flex-row justify-between',
+    custom: '',
+  },
+};
+
+const lightGradient = [
+  'rgba(255, 255, 255, 0)',
+  'rgba(255, 255, 255, .6)',
+  'rgba(255, 255, 255, .9)',
+  '#fff',
+];
+
+const darkGradient = [
+  'rgba(22, 24, 26, 0)',
+  'rgba(22, 24, 26, .6)',
+  'rgba(22, 24, 26, .9)',
+  'rgba(22, 24, 26, 0)',
+];
+
+// ----------------- BUTTON -------------------
 
 const Button = ({
-  label,
-  buttonColor,
-  textColor,
-  textSize,
+  label = '',
+  labelColor = 'text-white',
   textType,
-  textFont = 'font-bodySemiBold',
+  type = 'filled',
+  variant = 'primary',
   onPress,
-  type = 'primary',
+  isOnPressed = false,
   disabled = false,
-  isLoading = false,
-  icon = null,
+  isOnKeyboard = false,
+  float = false,
   className,
-  buttonWrap,
-}: ButtonType) => {
-  let defaultBg = disabled ? 'bg-gray-400' : 'bg-primary';
-
-  let buttonType = defaultStyle.baseButton;
-
-  if (type === 'text') {
-    buttonType = defaultStyle.textButton;
-  }
-
-  if (type === 'outlined') {
-    buttonType = defaultStyle.outlinedButton;
-  }
-
-  if (type === 'dark') {
-    defaultBg = 'bg-gray-800';
-  }
-
-  const buttonStyle = clsx(buttonType, buttonColor ?? defaultBg, className);
-
-  const textStyle = clsx(
-    disabled
-      ? defaultStyle.disabledTextColor
-      : textColor ?? defaultStyle.textColor,
-    textSize,
-    textFont,
+  children,
+}: ButtonProps) => {
+  const buttonStyle = clsx(
+    variants[type][variant],
+    {'border-primary': isOnPressed},
+    {'active:scale-105': isOnKeyboard},
+    className,
+    {['bg-inActive']: disabled},
   );
 
-  const buttonWrapStyle = clsx(rowCenter, buttonWrap);
+  /**
+   * TODO
+   * Need to update Nativewind to v4.0
+   * : group state doesn't work v2.0
+   */
+  const labelStyle = clsx(labelColor, {
+    [labelColor]: !isOnPressed,
+    ['text-primary']: isOnPressed,
+    ['text-white']: disabled,
+  });
+
+  const colorScheme = useColorScheme();
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      className={buttonStyle}
-      disabled={disabled}>
-      {isLoading ? (
-        <Loader color={textStyle} />
-      ) : (
-        <View className={buttonWrapStyle}>
-          <Text className={textStyle} type={textType}>
+    <>
+      <Pressable onPress={onPress} className={buttonStyle} disabled={disabled}>
+        {label ? (
+          <Text weight="medium" color={labelStyle} type={textType}>
             {label}
           </Text>
-          {icon}
+        ) : (
+          children
+        )}
+      </Pressable>
+      {float && (
+        <View pointerEvents="none">
+          <LinearGradient
+            colors={colorScheme === 'light' ? lightGradient : darkGradient}
+            className="absolute bottom-0 left-0 h-24 w-full"
+          />
         </View>
       )}
-    </TouchableOpacity>
+    </>
   );
 };
 
 export default Button;
-
-const defaultStyle = {
-  baseButton: 'w-100 h-[52px] justify-center items-center rounded-lg flex-row',
-  textButton: '',
-  outlinedButton:
-    'w-100 h-[52px] justify-center items-center rounded-lg flex-row border',
-  textColor: 'text-white',
-  disabledTextColor: 'text-gray-600',
-};

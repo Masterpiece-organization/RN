@@ -1,194 +1,156 @@
-import {useState} from 'react';
-import {SafeAreaView, Image, View} from 'react-native';
-import {Button, Text, TextInput, Container} from '@components/index';
-import {RootStackParamList} from '@/typings/RootStackParamList';
-import {StackScreenProps} from '@react-navigation/stack';
-import {useMainContext} from '@/contexts/MainContext';
-import {
-  useForm,
-  FormProvider,
-  SubmitHandler,
-  FieldValues,
-} from 'react-hook-form';
+import {useCallback} from 'react';
+import {View} from 'react-native';
+import {Button, TextInput, Container, TitleSection} from '@components/index';
+import {useForm, FieldValues} from 'react-hook-form';
 import useUser from '@/hooks/useUser';
+import {useFocusEffect} from '@react-navigation/native';
+import {AuthScreenProps, AuthScreens} from '@/types/navigationTypes';
+import {containerStyle} from '@/theme';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-// Image Source
-let googleIcon = require('../../assets/icons/google.png');
-let appleIcon = require('../../assets/icons/apple.png');
-let kakaoIcon = require('../../assets/icons/kakao.png');
+const Login = ({
+  navigation,
+}: AuthScreenProps<AuthScreens.LOGIN>): JSX.Element => {
+  // const {isMutating, setAuthState} = useMainContext();
 
-const BUTTON_DATA = [googleIcon, appleIcon, kakaoIcon];
-
-// Type
-type LoginScreenProps = StackScreenProps<RootStackParamList, 'Login'>;
-
-const Login = ({navigation}: LoginScreenProps): JSX.Element => {
-  const contexts = useMainContext();
-  const {loginQuery} = useUser();
+  /**
+   * API Calls
+   */
+  // const {loginQuery, getUserInfoQuery} = useUser();
 
   // useForm hook and set default behavior/values
-  const {...methods} = useForm({mode: 'onSubmit'});
+  // const {...methods} = useForm({mode: 'onSubmit'});
 
-  const [formError, setError] = useState<Boolean>(false);
+  const {control, handleSubmit} = useForm<FieldValues>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-  const onSubmit: SubmitHandler<FieldValues> = data => {
-    // Process the submitted form data
-    console.log(data.email, data.password);
-    // You can use the data to perform actions like logging in, etc.
+  const onSubmit = (data: FieldValues) => {};
 
-    const {email, password} = data;
+  // const onSubmit: SubmitHandler<FieldValues> = data => {
+  //   const {email, password} = data;
+  //   // const email = 'tpdnrqkqh@naver.com';
+  //   // const email = 'string';
+  //   // const password = 'string';
 
-    loginQuery.mutate(
-      {email, password},
-      {
-        onSuccess: () => {
-          contexts?.setUser(true);
-        },
-        onError: () => {
-          methods.setError('confirmPassword', {
-            type: 'manual',
-            message: '에러',
-          });
-        },
-      },
-    );
-  };
+  //   // loginQuery.mutate(
+  //   //   {email, password},
+  //   //   {
+  //   //     onSuccess: () => {
+  //   //       // getUserInfoQuery.mutate(undefined, {
+  //   //       //   onSuccess: () => {
+  //   //       //     console.log('성공!');
+  //   //       //   },
+  //   //       //   onError: err => {
+  //   //       //     const error = err as Error;
+  //   //       //     const message = error.message;
+  //   //       //     if (message === '프로필 설정이 필요합니다.') {
+  //   //       //       navigation.navigate('Nickname');
+  //   //       //     } else {
+  //   //       //       methods.setError('password', {
+  //   //       //         type: 'manual',
+  //   //       //         message,
+  //   //       //       });
+  //   //       //     }
+  //   //       //   },
+  //   //       // });
+  //   //     },
+  //   //     onError: err => {
+  //   //       const error = err as Error;
+  //   //       const message = error.message;
 
-  const handleOnPress = () => {
-    console.log('onPress!');
-  };
+  //   //       if (message === '프로필 설정이 필요합니다.') {
+  //   //         navigation.navigate('Nickname');
+  //   //       } else {
+  //   //         methods.setError('password', {
+  //   //           type: 'manual',
+  //   //           message,
+  //   //         });
+  //   //       }
+  //   //     },
+  //   //   },
+  //   // );
+
+  //   setAuthState({accessToken: null, refreshToken: null, authenticated: true});
+  // };
+
+  /**
+   * TODO: Login with Sns
+   */
+  // const handleOnPress = () => {
+  //   navigation.navigate('Nickname');
+  // };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        control._reset();
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   return (
     <Container>
-      <SafeAreaView className="flex-1">
-        <SafeAreaView className="flex">
-          <View className="justify-center pt-8">
-            <Text className="mb-2" type="title">
-              안녕하세요,
-            </Text>
-            <Text>회원 서비스 이용을 위해 로그인 해주세요.</Text>
-          </View>
-        </SafeAreaView>
-
-        <View className="flex-1 pt-9">
-          <View className="flex-row justify-center gap-x-2">
-            {BUTTON_DATA.map(source => (
-              <View className="flex-1" key={source}>
-                <Button
-                  label=""
-                  onPress={handleOnPress}
-                  type={
-                    contexts?.colorScheme === 'dark' ? 'primary' : 'outlined'
-                  }
-                  buttonColor={
-                    contexts?.colorScheme === 'dark' ? 'bg-neutral-700' : ''
-                  }
-                  className="border-neutral-300"
-                  icon={<Image source={source} className="w-6 h-6" />}
-                />
-              </View>
-            ))}
-          </View>
-          <View className="relative pt-16 flex items-center justify-center">
-            <View className="absolute z-10 bg-white dark:bg-black px-3">
-              <Text
-                textColor={
-                  contexts?.colorScheme === 'dark'
-                    ? 'text-white'
-                    : 'text-neutral-600'
-                }>
-                또는
-              </Text>
-            </View>
-
-            <View className="absolute h-px bg-neutral-300 w-full" />
-          </View>
-
-          <View className="form space-y-2 ">
-            {formError ? (
-              <View>
-                <Text textColor="text-red">
-                  문제가생겼습니다. 잠시후 다시 시도해주세요.
-                </Text>
-              </View>
-            ) : (
-              <>
-                <FormProvider {...methods}>
-                  <TextInput
-                    name="email"
-                    placeholder="이메일 주소"
-                    keyboardType="email-address"
-                    textContentType="emailAddress"
-                    rules={{
-                      required: '이메일을 입력해주세요.',
-                      pattern: {
-                        value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
-                        message: '이메일 형식이 아닙니다.',
-                      },
-                    }}
-                    setFormError={setError}
-                    className="mb-2"
-                  />
-                  <TextInput
-                    name="password"
-                    secureTextEntry
-                    placeholder="비밀번호"
-                    textContentType="password"
-                    rules={{required: '비밀번호를 입력해주세요.'}}
-                    setFormError={setError}
-                  />
-                </FormProvider>
-              </>
-            )}
-            <View className="pt-3">
-              <Button
-                label="로그인"
-                onPress={methods.handleSubmit(onSubmit)}
-                isLoading={!!contexts?.isMutating}
-              />
-            </View>
-          </View>
-
-          <View className="mt-7 items-center">
-            <Button
-              label="비밀번호를 잊으셨나요?"
-              onPress={() => navigation.navigate('FindPw')}
-              textColor={
-                contexts?.colorScheme === 'dark'
-                  ? 'text-white'
-                  : 'text-neutral-600'
-              }
-              buttonColor=""
-              type="text"
-            />
-          </View>
-        </View>
-
-        <View className="pb-8">
-          <View className="flex-row justify-center items-center">
-            <Text
-              textColor={
-                contexts?.colorScheme === 'dark'
-                  ? 'text-white'
-                  : 'text-neutral-600'
-              }>
-              아직 회원이 아니신가요?
-            </Text>
-            <Button
-              label="회원가입"
-              onPress={() => navigation.navigate('Terms')}
-              textColor={
-                contexts?.colorScheme === 'dark'
-                  ? 'text-white'
-                  : 'text-neutral-900'
-              }
-              type="text"
-              buttonColor=""
-              className="pl-2"
-            />
-          </View>
-        </View>
-      </SafeAreaView>
+      <TitleSection
+        title="안녕하세요,"
+        body="회원 서비스 이용을 위해 로그인 해주세요."
+      />
+      <View>
+        <TextInput
+          control={control}
+          name="email"
+          placeholder="이메일 주소"
+          keyboardType="email-address"
+          rules={{
+            required: '이메일을 입력해주세요.',
+            pattern: {
+              value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+              message: '올바른 이메일 형식이 아닙니다.',
+            },
+          }}
+          className="mb-2"
+        />
+        <TextInput
+          control={control}
+          name="password"
+          placeholder="비밀번호"
+          secureTextEntry
+          rules={{required: '비밀번호를 입력해주세요.'}}
+          className="mb-2"
+        />
+        <Button
+          label="로그인"
+          onPress={handleSubmit(onSubmit)}
+          className="mb-3 mt-2"
+        />
+      </View>
+      <View className="flex-row items-center justify-center">
+        <Button
+          label="회원가입"
+          type="text"
+          textType="caption"
+          labelColor="text-gray-300"
+          className="mr-2"
+          onPress={() => navigation.navigate(AuthScreens.TERMS)}
+        />
+        <View className="h-1/2 w-[1px] bg-gray-300" />
+        <Button
+          label="비밀번호 찾기"
+          type="text"
+          textType="caption"
+          labelColor="text-gray-300"
+          className="ml-2"
+          onPress={() =>
+            navigation.navigate(AuthScreens.EMAIL_CHECK, {
+              type: 'password',
+            })
+          }
+        />
+      </View>
     </Container>
   );
 };

@@ -1,0 +1,102 @@
+diff --git a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedHeader.tsx b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedHeader.tsx
+index 3c845d1..5a0a619 100644
+--- a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedHeader.tsx
++++ b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedHeader.tsx
+@@ -33,10 +33,11 @@ export const AnimatedHeader = ({
+       {HeaderComponent ? (
+         <>
+           {headerImage ? (
++
+             <AnimatedImageBackground
+               source={headerImage}
+               style={[
+-                { height: imageHeight, width: width * 1.2 },
++                { height: imageHeight, width: width * 1.2},
+                 {
+                   transform: [
+                     { scale: scale },
+@@ -63,6 +64,7 @@ export const AnimatedHeader = ({
+               ]}
+             >
+               {HeaderComponent}
++              
+             </Animated.View>
+           )}
+         </>
+@@ -82,6 +84,7 @@ export const AnimatedHeader = ({
+           ]}
+         />
+       )}
++
+     </View>
+   );
+ };
+@@ -90,5 +93,7 @@ const styles = StyleSheet.create({
+   imgContainer: {
+     alignItems: 'center',
+     overflow: 'hidden',
++    backgroundColor:"#16181A"
+   },
++
+ });
+diff --git a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedNavbar.tsx b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedNavbar.tsx
+index 31c373d..0ace3dd 100644
+--- a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedNavbar.tsx
++++ b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedNavbar.tsx
+@@ -9,6 +9,7 @@ const AnimatedNavbar = ({
+   OverflowHeaderComponent,
+   TopNavbarComponent,
+   headerHeight,
++  backgroundColor,
+   headerElevation,
+ }: AnimatedNavbarProps) => {
+   const [headerOpacity, overflowHeaderOpacity] = useAnimateNavbar(
+@@ -26,6 +27,7 @@ const AnimatedNavbar = ({
+             zIndex: headerOpacity,
+             height: headerHeight,
+             opacity: headerOpacity,
++            backgroundColor: backgroundColor,
+             elevation: headerElevation,
+           },
+         ]}
+diff --git a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedScrollView.tsx b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedScrollView.tsx
+index 52fcf3e..bbb12bb 100644
+--- a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedScrollView.tsx
++++ b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/components/AnimatedScrollView.tsx
+@@ -21,6 +21,7 @@ export const AnimatedScrollView = forwardRef<
+       headerImage,
+       disableScale,
+       children,
++      backgroundColor,
+       imageStyle,
+       ...props
+     }: AnimatedScrollViewProps,
+@@ -56,6 +57,7 @@ export const AnimatedScrollView = forwardRef<
+           headerHeight={headerNavHeight}
+           scroll={scroll}
+           imageHeight={imageHeight}
++          backgroundColor={backgroundColor}
+           OverflowHeaderComponent={HeaderNavbarComponent}
+           TopNavbarComponent={TopNavBarComponent}
+         />
+diff --git a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/types.d.ts b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/types.d.ts
+index 01b29fa..86d69c6 100644
+--- a/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/types.d.ts
++++ b/node_modules/@kanelloc/react-native-animated-header-scroll-view/src/types.d.ts
+@@ -52,6 +52,8 @@ type AnimatedViewProps = {
+    * Image styles
+    */
+   imageStyle?: StyleProp<ImageStyle>;
++  
++  backgroundColor?:string;
+ };
+ 
+ export type AnimatedScrollViewProps = AnimatedViewProps & ScrollViewProps;
+@@ -65,6 +67,7 @@ export type AnimatedNavbarProps = {
+   imageHeight: number;
+   headerHeight: number;
+   headerElevation: number;
++  backgroundColor?: string;
+ };
+ 
+ export type AnimatedHeaderProps = {

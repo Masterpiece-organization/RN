@@ -1,11 +1,15 @@
 import {Alert} from 'react-native';
 
+type ButtonProps = {
+  text: string;
+  onPress?: () => void;
+};
 interface AlertProps {
   title: string;
   message: string;
-  onPress: () => void;
+  buttons: ButtonProps[];
 }
 
-export default function showAlert({title, message, onPress}: AlertProps) {
-  Alert.alert(title, message, [{text: '확인', onPress: onPress}]);
+export default function showAlert({title, message, buttons}: AlertProps) {
+  Alert.alert(title, message, buttons);
 }

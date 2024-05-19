@@ -1,129 +1,170 @@
-import React, {useEffect, useRef} from 'react';
+import {useCallback, forwardRef, ReactNode, useMemo} from 'react';
+import {StyleSheet, Platform, useColorScheme} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {
-  View,
-  StyleSheet,
-  Modal,
-  Animated,
-  TouchableWithoutFeedback,
-  Dimensions,
-  PanResponder,
-} from 'react-native';
-import {Text, Button} from '@/components';
-import CloseIcon from '@/assets/icons/closeIcon.svg';
+  BottomSheetModal,
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {FullWindowOverlay} from 'react-native-screens';
+// import {useBottomSheetStore} from '@/stores/store';
+// import {useBottomSheetStore} from '@/hooks/useBottomSheet';
+interface BottomSheetProps {
+  children: ReactNode;
+}
 
-const BottomSheet = ({modalVisible, setModalVisible, title}: any) => {
-  const screenHeight = Dimensions.get('screen').height;
-  const panY = useRef(new Animated.Value(screenHeight)).current;
-  const translateY = panY.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: [0, 0, 1],
-  });
+// const BottomSheet = ({children}: BottomSheetProps) => {
+//   const colorScheme = useColorScheme();
+//   const {isOpen, close} = useBottomSheetStore();
+//   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const resetBottomSheet = Animated.timing(panY, {
-    toValue: 0,
-    duration: 300,
-    useNativeDriver: true,
-  });
+//   const renderBackdrop = useCallback(
+//     // eslint-disable-next-line @typescript-eslint/no-shadow
+//     (props: any, close: () => void) => (
+//       <BottomSheetBackdrop
+//         {...props}
+//         pressBehavior="close"
+//         appearsOnIndex={0}
+//         disappearsOnIndex={-1}
+//         style={styles.backdrop}
+//         onPress={close}
+//       />
+//     ),
+//     [],
+//   );
 
-  const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight,
-    duration: 300,
-    useNativeDriver: true,
-  });
+//   const containerComponent = useCallback(
+//     (props: any) => <FullWindowOverlay>{props.children}</FullWindowOverlay>,
+//     [],
+//   );
 
-  const panResponders = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => false,
-      onPanResponderMove: (event, gestureState) => {
-        panY.setValue(gestureState.dy);
-      },
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
-          closeModal();
-        } else {
-          resetBottomSheet.start();
+//   useFocusEffect(
+//     useCallback(() => {
+//       if (isOpen) {
+//         bottomSheetRef.current?.present();
+//       } else {
+//         bottomSheetRef.current?.close();
+//       }
+
+//       return () => {
+//         bottomSheetRef.current?.close();
+//       };
+//     }, [isOpen]),
+//   );
+
+//   const dynamicStyles = useMemo(
+//     () => ({
+//       backgroundStyle: {
+//         backgroundColor: colorScheme === 'light' ? '#fff' : '#2A2C2E',
+//       },
+//       indicatorStyle: {
+//         backgroundColor: colorScheme === 'light' ? '#DEE0E2' : '#525456',
+//       },
+//     }),
+//     [colorScheme],
+//   );
+
+//   const handleSheetChanges = useCallback(
+//     (index: number) => {
+//       if (index === -1) {
+//         close();
+//       }
+//     },
+//     [close],
+//   );
+
+//   return (
+//     <BottomSheetModal
+//       ref={bottomSheetRef}
+//       index={0}
+//       animateOnMount
+//       backdropComponent={props => renderBackdrop(props, close)}
+//       bottomInset={36}
+//       style={styles.bottomSheetContaier}
+//       enableDynamicSizing={true}
+//       detached
+//       backgroundStyle={dynamicStyles.backgroundStyle}
+//       containerComponent={
+//         Platform.OS === 'ios' ? containerComponent : undefined
+//       }
+//       maxDynamicContentSize={600}
+//       contentHeight={300}
+//       handleIndicatorStyle={dynamicStyles.indicatorStyle}
+//       onChange={handleSheetChanges}>
+//       <BottomSheetView style={dynamicStyles.backgroundStyle}>
+//         {children}
+//       </BottomSheetView>
+//     </BottomSheetModal>
+//   );
+// };
+
+const BottomSheet = forwardRef<BottomSheetModalMethods, any>(
+  ({children}, ref) => {
+    const colorScheme = useColorScheme();
+    const renderBackdrop = useCallback(
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      (props: any) => (
+        <BottomSheetBackdrop
+          {...props}
+          pressBehavior="close"
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          style={styles.backdrop}
+        />
+      ),
+      [],
+    );
+    const dynamicStyles = useMemo(
+      () => ({
+        backgroundStyle: {
+          backgroundColor: colorScheme === 'light' ? '#fff' : '#2A2C2E',
+        },
+        indicatorStyle: {
+          backgroundColor: colorScheme === 'light' ? '#DEE0E2' : '#525456',
+        },
+      }),
+      [colorScheme],
+    );
+    const containerComponent = useCallback(
+      (props: any) => <FullWindowOverlay>{props.children}</FullWindowOverlay>,
+      [],
+    );
+    return (
+      <BottomSheetModal
+        ref={ref}
+        index={0}
+        animateOnMount
+        backdropComponent={props => renderBackdrop(props)}
+        bottomInset={36}
+        style={styles.bottomSheetContaier}
+        enableDynamicSizing={true}
+        detached
+        backgroundStyle={dynamicStyles.backgroundStyle}
+        containerComponent={
+          Platform.OS === 'ios' ? containerComponent : undefined
         }
-      },
-    }),
-  ).current;
-
-  useEffect(() => {
-    if (modalVisible) {
-      resetBottomSheet.start();
-    }
-  }, [modalVisible]);
-
-  const closeModal = () => {
-    closeBottomSheet.start(() => {
-      setModalVisible(false);
-    });
-  };
-
-  return (
-    <Modal
-      visible={modalVisible}
-      animationType={'fade'}
-      transparent
-      statusBarTranslucent>
-      <View style={styles.overlay}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <View style={styles.background} />
-        </TouchableWithoutFeedback>
-        <Animated.View
-          style={{
-            ...styles.bottomSheetContainer,
-            transform: [{translateY: translateY}],
-          }}
-          {...panResponders.panHandlers}>
-          <Text type="title" textColor="text-black" className="mb-xl">
-            {title}
-          </Text>
-          <View className="w-full px-lg">
-            <Button
-              label="로그아웃"
-              buttonColor="bg-primary mb-xs"
-              onPress={console.log}
-            />
-            <Button
-              label="취소"
-              buttonColor="bg-gray-800"
-              onPress={closeModal}
-            />
-          </View>
-          <View className="absolute right-[30px] top-9">
-            {/* <CloseIcon onPress={closeModal} /> */}
-            <Button
-              label=""
-              onPress={closeModal}
-              type="text"
-              buttonColor=""
-              className="border-gray-400"
-              icon={<CloseIcon onPress={closeModal} />}
-            />
-          </View>
-        </Animated.View>
-      </View>
-    </Modal>
-  );
-};
+        maxDynamicContentSize={600}
+        contentHeight={300}
+        handleIndicatorStyle={dynamicStyles.indicatorStyle}>
+        <BottomSheetView style={dynamicStyles.backgroundStyle}>
+          {children}
+        </BottomSheetView>
+      </BottomSheetModal>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
-  overlay: {
+  bottomSheetContaier: {
     flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    marginHorizontal: 15,
+    borderRadius: 24,
+    overflow: 'hidden',
+    position: 'absolute',
   },
-  background: {
-    flex: 1,
-  },
-  bottomSheetContainer: {
-    height: 300,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 84,
+  backdrop: {
+    backgroundColor: 'rgba(0,0,0,.6)',
   },
 });
 
